@@ -1,0 +1,50 @@
+<group name="local,custom_detections,">
+
+  <rule id="100001" level="10">
+    <if_sid>2502</if_sid>
+    <description>Security Alert: Active SSH Brute Force Attack Detected and Escalated.</description>
+    <group>authentication_failures,brute_force,mitre_t1110.001</group>
+  </rule>
+
+  <rule id="100002" level="8">
+    <if_sid>31122, 31108</if_sid>
+    <match>Gobuster|DirBuster|Wget</match>
+    <description>Security Alert: Automated Web Directory Enumeration Scanner Detected via User-Agent Match.</description>
+    <group>web_scanner,reconnaissance,mitre_t1083</group>
+  </rule>
+
+  <rule id="100003" level="12">
+    <if_sid>2507, 550, 554</if_sid>
+    <match>/etc/passwd</match>
+    <description>CRITICAL ALERT: Unauthorized Modification Detected inside Identity File (/etc/passwd).</description>
+    <group>syscheck,tampering,persistence,mitre_t1098</group>
+  </rule>
+
+  <rule id="100004" level="10">
+    <if_sid>601</if_sid>
+    <description>SOAR Orchestration: Active Response successfully executed firewall drop command on endpoint.</description>
+    <group>active_response,containment</group>
+  </rule>
+
+  <rule id="100005" level="10">
+    <if_sid>602</if_sid>
+    <description>SOAR Orchestration: Active Response successfully reversed/flushed firewall drop rule on endpoint.</description>
+    <group>active_response,containment</group>
+  </rule>
+<!-- Escalating Kerberoasting Events -->
+  <rule id="100010" level="10">
+    <if_sid>60100, 60101, 60103, 60106</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$|^0x18$|^23$</field>
+    <description>Security Alert: Potential Kerberoasting activity detected via weak encryption ticket request (RC4-HMAC).</description>
+    <group>credential_access,mitre_t1558.003</group>
+  </rule>
+
+  <!-- Fallback Debug Rule (To verify ANY 4769 logs are being parsed) -->
+  <rule id="100011" level="5">
+    <if_sid>60100, 60101, 60103, 60106</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <description>Security Event: Generic Kerberos Ticket Request (Event ID 4769) parsed by SIEM.</description>
+    <group>windows_security</group>
+  </rule>
+</group>

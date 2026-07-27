@@ -1,0 +1,19 @@
+title: SSH Brute Force Attempt
+id: a7e3b9c4-1234-4a5b-8c9d-abcdef100001
+status: experimental
+description: Detects a burst of failed SSH authentication attempts from a single source network device indicating a brute force attack.
+author: Shakshi
+date: 2026/05/30
+tags:
+    - attack.credential_access
+    - attack.t1110.001
+logsource:
+    product: linux
+    service: sshd
+detection:
+    selection:
+        messages|contains: 'Failed password for'
+    condition: selection
+falsepositives:
+    - Administrative credential typos or misconfigured internal automated scripts.
+level: high

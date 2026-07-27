@@ -1,0 +1,19 @@
+title: Automated Web Directory Enumeration Scan
+id: b2f4c0d5-5678-4a5b-8c9d-abcdef100002
+status: experimental
+description: Detects a high volume of web application 404 Not Found status codes originating from a common client endpoint.
+author: Shakshi
+date: 2026/05/30
+tags:
+    - attack.discovery
+    - attack.t1083
+logsource:
+    category: webserver
+    product: linux
+detection:
+    selection:
+        status: 404
+    condition: selection
+falsepositives:
+    - Broken deployment hyperlinks or web application structure redesigns causing broken assets.
+level: medium

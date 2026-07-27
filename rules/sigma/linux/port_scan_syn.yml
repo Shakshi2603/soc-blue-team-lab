@@ -1,0 +1,21 @@
+title: Half-Open Nmap SYN Port Scan Detected
+id: c3e5d1f6-9012-4a5b-8c9d-abcdef100003
+status: experimental
+description: Detects inbound network recon activity matching the classic rapid half-open TCP SYN scanning signature.
+author: Shakshi
+date: 2026/05/30
+tags:
+    - attack.reconnaissance
+    - attack.t1046
+logsource:
+    category: firewall
+    product: linux
+detection:
+    selection:
+        action: 'REJECT'
+        proto: 'tcp'
+        flags: 'SYN'
+    condition: selection
+falsepositives:
+    - Highly aggressive legacy client network discovery scripts or internal vulnerability scanning software.
+level: high

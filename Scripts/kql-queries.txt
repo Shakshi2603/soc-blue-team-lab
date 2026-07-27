@@ -1,0 +1,54 @@
+**Query 1: Isolate and Parse Raw Failed SSH Passwords**
+
+Syslog
+| where Facility == "auth" and SyslogMessage contains "Failed password"
+| extend TargetUser = extract(@'for (.+) from', 1, SyslogMessage),
+         AttackerIP = extract(@'from (.+) port', 1, SyslogMessage)
+| project TimeGenerated, Computer, TargetUser, AttackerIP, SyslogMessage
+| order by TimeGenerated desc
+
+**Query 2: Detect Active SSH Brute Force Attacks**
+
+Syslog
+| where Facility == "auth" and SyslogMessage contains "Failed password"
+| extend AttackerIP = extract(@'from (.+) port', 1, SyslogMessage)
+| summarize FailureCount = count() by Computer, AttackerIP, bin(TimeGenerated, 5m)
+| where FailureCount > 5
+| order by FailureCount desc
+
+**Query 3: Catch Apache 404 Web Directory Scans**
+
+Syslog
+| where ProcessName == "apache2" and SyslogMessage contains " 404 "
+| extend ClientIP = extract(@'^([0-9\.]+)', 1, SyslogMessage),
+         RequestedPath = extract(@'"GET (.+) HTTP', 1, SyslogMessage)
+| summarize RequestCount = count(), UniquePathsTargeted = dcount(RequestedPath) by Computer, ClientIP, bin(TimeGenerated, 1m)
+| where RequestCount > 15
+| order by RequestCount desc
+
+**Query 4: Flag High-Risk "Brute Force to Success" Transitions**
+
+let AttackerBlacklist = Syslog
+| where Facility == "auth" and SyslogMessage contains "Failed password"
+| extend AttackerIP = extract(@'from (.+) port', 1, SyslogMessage)
+| summarize FailCount = count() by AttackerIP
+| where FailCount > 5
+| project AttackerIP;
+Syslog
+| where Facility == "auth" and SyslogMessage contains "Accepted password"
+| extend SuccessfulIP = extract(@'from (.+) port', 1, SyslogMessage),
+         TargetUser = extract(@'for (.+) from', 1, SyslogMessage)
+| where SuccessfulIP in (AttackerBlacklist)
+| project TimeGenerated, Computer, TargetUser, SuccessfulIP, AlertContext = "CRITICAL: Account compromised via successful Brute Force!"
+
+**Query 5: Hunt for Off-Hours Administrative Activities**
+
+Syslog
+| where Facility == "auth" and SyslogMessage contains "Accepted"
+| extend LoginHour = datetime_part("hour", TimeGenerated),
+         LoginDay = datetime_part("dayofweek", TimeGenerated)
+| extend TargetUser = extract(@'for (.+) from', 1, SyslogMessage),
+         SourceIP = extract(@'from (.+) port', 1, SyslogMessage)
+| where LoginHour < 7 or LoginHour > 20 or LoginDay == 0 or LoginDay == 6
+| project TimeGenerated, Computer, TargetUser, SourceIP, LoginHour, LoginDay
+| order by TimeGenerated desc
