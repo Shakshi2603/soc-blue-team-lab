@@ -14,7 +14,7 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 
 ## 🏗️ Lab Architecture
 
-![Lab Architecture Diagram](Lab-Diagram.png)
+[Lab Architecture Diagram](Lab-Diagram.png)
 
 
 **Environment Overview:**
