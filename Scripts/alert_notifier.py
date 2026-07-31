@@ -12,8 +12,8 @@ import time
 import requests
 
 # --- SOAR INTERFACE BOUNDARIES ---
-TELEGRAM_TOKEN = "8916363390:AAF1v7Cf3QXX3MvEVwyWpHNTAxtyZcqWvjU"
-CHAT_ID = "8937596428"
+TELEGRAM_TOKEN = "89168***************************88"
+CHAT_ID = "893*******"
 ALERT_LOG_PATH = "/var/ossec/logs/alerts/alerts.json" 
 SEVERITY_THRESHOLD = 10  # Match or exceed Level 10 Alerts 
 
@@ -31,8 +31,8 @@ import time
 import requests
 
 # --- SOAR INTERFACE BOUNDARIES ---
-TELEGRAM_TOKEN = "PASTE_YOUR_TELEGRAM_BOT_TOKEN_HERE"
-CHAT_ID = "PASTE_YOUR_PERSONAL_CHAT_ID_HERE"
+TELEGRAM_TOKEN = "TELEGRAM_BOT_TOKEN"
+CHAT_ID = "PERSONAL_CHAT_ID"
 ALERT_LOG_PATH = "/var/ossec/logs/alerts/alerts.json" 
 SEVERITY_THRESHOLD = 10  # Match or exceed Level 10 Alerts 
 
