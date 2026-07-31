@@ -40,7 +40,7 @@ This performs LDAP-based collection using the credentials of a standard domain u
 - **T1069.002 — Permission Groups Discovery: Domain Groups:** enumeration of 52 domain groups and their memberships
 - **TA0007 — Discovery (tactic):** overall reconnaissance phase preceding any credential theft or lateral movement
 
-After collection, the attacker loaded the data into BloodHound's Cypher query interface and traced inbound object control relationships. The resulting graph (see Evidence section) shows that members of `ENTERPRISE KEY ADMINS@SOC.LAB` and `KEY ADMINS@SOC.LAB` hold `AddKeyCredentialLink` rights on `DC01.SOC.LAB`, which can be abused to perform a Shadow Credentials attack and request a TGT as the domain controller's computer account — a direct path toward `SOC.LAB` domain compromise and ultimately `DOMAIN ADMINS@SOC.LAB`.
+After collection, the attacker loaded the data into BloodHound's Cypher query interface and traced inbound object control relationships. The resulting graph (see Evidence section) shows that members of `ENTERPRISE KEY ADMINS@SOC.LAB` and `KEY ADMINS@SOC.LAB` hold `AddKeyCredentialLink` rights on `DC01.SOC.LAB`. This risk allows an attacker to execute a Shadow Credentials attack, request a ticket granting ticket (TGT) as the domain controller account, and achieve full domain compromise.
 
 ## 4. Log Evidence
 
