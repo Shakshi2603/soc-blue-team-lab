@@ -105,11 +105,7 @@ Rule `100011` was kept in place as a parsing-verification fallback to confirm th
 - `screenshots/hashcat-cracked.png` — Hashcat recovering the plaintext password
 - `screenshots/wazuh-4769-rc4-detection.png` — raw Wazuh log confirming detection of the RC4 ticket request
 
-## 5. Network Evidence
-
-A Kerberos TGS-REQ/TGS-REP exchange occurred between 192.168.10.5 (Kali-Attacker) and 192.168.10.10 (DC01.SOC.LAB) on TCP/UDP port 88. *(Reference `pcaps/kerberoasting.pcap` here with a note on the AS-REQ/TGS-REQ message types visible in Wireshark, and the absence of a prior AS-REQ for a new TGT — since `jsmith` already had a valid TGT cached — which can itself be a secondary detection point.)*
-
-## 6. IOC Table
+## 5. IOC Table
 
 | Indicator | Value | Notes |
 |---|---|---|
