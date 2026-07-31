@@ -10,8 +10,8 @@ import json
 import requests
 
 # --- SYSTEM API CONFIGURATION BOUNDARIES ---
-VT_API_KEY = "18aa43a4b7bf7be0264c48a98ccbdfe883c87358c2a8901368ab60b54ab69b71"
-ABUSE_API_KEY = "76ab1b3b51a2fd64f12fcfb7688ae22f2f751e365b56081ac8e78a1ecb665df31020c86c596ea180"
+VT_API_KEY = "YOUR_VIRUSTOTAL_API_KEY_HERE"
+ABUSE_API_KEY = "YOUR_ABUSEIPDB_API_KEY_HERE"
 
 def check_virus_total(ip_address):
     """Queries VirusTotal v3 IP Analysis API Endpoint"""
