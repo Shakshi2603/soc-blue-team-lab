@@ -32,7 +32,7 @@ The attack was successfully detected via custom Wazuh and splunk correlation rul
 
 **Step 1 — Identify and request the SPN ticket:**
 ```bash
-impacket-GetUserSPNs SOC.LAB/jsmit:Password123! -dc-ip 192.168.10.10 -request -outputfile kerberoast.hash
+impacket-GetUserSPNs SOC.LAB/jsmith:Password123! -dc-ip 192.168.10.10 -request -outputfile kerberoast.hash
 ```
 
 This authenticates as `jsmith`, queries the domain for all accounts with a registered SPN, and requests a TGS for each one found. The domain controller has no way to distinguish this from a legitimate service ticket request — any authenticated user can request a TGS for any SPN-registered account, by design of the Kerberos protocol.
