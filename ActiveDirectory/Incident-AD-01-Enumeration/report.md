@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-A simulated attacker on the Kali-Attacker host used valid low-privilege domain credentials (`jsmith`) to enumerate the SOC.LAB Active Directory domain via `bloodhound-python`. The collector queried the domain controller (DC01.SOC.LAB) over LDAP and successfully mapped the full object graph: 11 users, 52 groups, 4 OUs, 2 GPOs, 19 containers, and 3 domain-joined computers. The resulting BloodHound graph revealed a viable attack path from low-privilege AD objects to Domain Admins via chained `GenericWrite` and `AddKeyCredentialLink` relationships, exposing a privilege escalation path that would not be obvious from a standard AD permissions review.
+A simulated attacker on the Kali-Attacker host used valid low-privilege domain credentials (`jsmith`) to enumerate the SOC.LAB Active Directory domain via `bloodhound-python`. The collector queried the domain controller (DC01.SOC.LAB) over LDAP and successfully mapped the full object graph: 11 users, 52 groups, 4 OUs, 2 GPOs, 19 containers, and 3 domain-joined computers. The resulting BloodHound graph revealed a viable attack path from low-privilege AD objects to Domain Admins, exposing a privilege escalation path that would not be obvious from a standard AD permissions review.
 
 This investigation demonstrates how a single compromised domain account — even one with no special privileges — can be used to fully map an Active Directory environment and surface escalation paths to full domain compromise, without triggering any alerts in a poorly instrumented environment.
 
@@ -22,7 +22,7 @@ This investigation demonstrates how a single compromised domain account — even
 | T+0:01 | TGT obtained for `jsmith`; LDAP connection established to `dc01.soc.lab` |
 | T+0:01–0:09 | Domain, computer, user, group, GPO, OU, and container enumeration completed |
 | T+0:09 | Collection completed: 11 users, 52 groups, 2 GPOs, 4 OUs, 19 containers, 0 trusts, 3 computers |
-| T+~5h (post-collection) | Analyst imports collection into BloodHound; Cypher query reveals escalation path from the compromised service account to Domain Admins |
+| T+~3h (post-collection) | Analyst imports collection into BloodHound; Cypher query reveals escalation path from the compromised service account to Domain Admins |
 
 ## 3. Attack Methodology
 
