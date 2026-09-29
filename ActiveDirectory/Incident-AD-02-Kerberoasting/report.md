@@ -131,7 +131,11 @@ Two compounding factors enabled this attack: (1) the `svc_backup` account was re
 
 Successful cracking of `svc_backup`'s password grants the attacker that account's full privileges. Service accounts are frequently over-privileged (backup operators, scheduled task runners, etc.), making compromise of even a single Kerberoastable account a common initial step toward lateral movement or domain-wide impact, depending on what `svc_backup` has access to in the environment.
 
-## 9. Recommendations
+## 9. Containment
+
+In a production environment, immediate containment would include disabling jsmith and forcing a password reset. In this lab, I decided to reset svc_backup's password, remove its SPN, confirmed that the rule stops firing.
+
+## 10. Recommedations
 
 1. **Enforce AES encryption for Kerberos service tickets** domain-wide via Group Policy (`msDS-SupportedEncryptionTypes`), removing RC4 as a viable downgrade option for ticket requests.
 2. **Set strong, randomly generated passwords (25+ characters) for all service accounts**, or migrate to **Group Managed Service Accounts (gMSA)**, which rotate passwords automatically and are effectively immune to offline cracking.
@@ -139,7 +143,7 @@ Successful cracking of `svc_backup`'s password grants the attacker that account'
 4. **Audit which accounts hold SPNs** regularly using `setspn -Q */*`, and remove SPNs from accounts that don't strictly require them.
 5. **Restrict privileges of all service accounts** to the minimum necessary (least privilege), so that even if Kerberoasted, the blast radius is limited.
 
-## 10. Lessons Learned
+## 11. Lessons Learned
 
 This was the most valuable investigation in the lab so far because it demonstrates the full attacker-to-defender loop: understanding *why* Kerberoasting works at the protocol level (any authenticated user can request a TGS for any SPN), reproducing the attack accurately, and then writing a detection rule that targets the specific technical signature (RC4 encryption type) rather than just alerting on "Kerberos ticket requested," which would be far too noisy in a real environment. Building the fallback rule (100011) was also a useful lesson in detection engineering discipline — verifying that the underlying event is even reaching the SIEM before assuming a more specific rule's silence means "no attack," rather than "broken log pipeline."
 
