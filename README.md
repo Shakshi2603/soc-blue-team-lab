@@ -6,7 +6,7 @@
 
 ## 🔭 What This Is
 
-This is not a tutorial-following exercise. This is a professional-grade SOC home lab where I simulate real attacks, detect them across multiple SIEM platforms, write custom detection rules, and document everything in NIST Incident Response format.
+This is not a tutorial-following exercise. This is a SOC home lab where I simulate attacks, detect them across multiple SIEM platforms, write custom detection rules, and document everything in NIST Incident Response format.
 
 Built by a BTech student at NIT Hamirpur who is actively transitioning into cybersecurity — starting with blue team and SOC operations.
 
