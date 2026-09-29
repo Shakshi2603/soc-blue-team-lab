@@ -185,7 +185,7 @@ Techniques covered across all investigations:
 BTech student (Electrical Engineering) at **NIT Hamirpur**, actively building skills for a career in cybersecurity — starting with blue team / SOC operations.
 
 - 📜 Google Cybersecurity Certificate (Coursera)
-- 🔐 TryHackMe SOC Level 1 (in progress)
+- 🔐 TryHackMe SOC Level 1 
 - 🎯 Target role: SOC Analyst Internship in India
 
 📬 Connect with me on [LinkedIn](https://www.linkedin.com/in/shakshi-sona/)
