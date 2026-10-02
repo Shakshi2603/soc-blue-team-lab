@@ -49,7 +49,7 @@ The kit also queries `api.sypexgeo.net`, a third-party IP-geolocation service, u
 | Exfil Endpoint | `api.telegram.org/bot<token>/sendMessage` | Legitimate service abused for exfiltration |
 | Third-party API | `api.sypexgeo.net` | Used to geolocate victims by IP |
 | Threat Actor Alias | `j1j1b1s@m3r0` | Self-attributed in PHP source comment |
-| Impersonated Brand | PancakeSwap / MetaMask (pancakeswap.finance) | Legitimate brand being spoofed — **not** attacker infrastructure |
+| Impersonated Brand | PancakeSwap / MetaMask (pancakeswap.finance) | Legitimate brand being spoofed - **not** attacker infrastructure |
 
 ## MITRE ATT&CK Mapping
 | Tactic | Technique | Evidence |
@@ -68,7 +68,7 @@ The kit also queries `api.sypexgeo.net`, a third-party IP-geolocation service, u
 - **Recommendation:** Report the Telegram bot token/chat ID to Telegram's abuse team for takedown; since no attacker-controlled domain was recovered, monitor for reuse of this bot token or the "j1j1b1s@m3r0" alias across other phishing kit samples; issue a user awareness notice on verifying wallet-connect URLs before entering seed phrases.
 
 ## Lessons Learned
-This lab required investigating from the **attacker's infrastructure side** (the kit itself) rather than the victim's inbox. The most useful takeaway was that exfiltration didn't rely on attacker-owned infrastructure at all — using
+This lab required investigating from the **attacker's infrastructure side** (the kit itself) rather than the victim's inbox. The most useful takeaway was that exfiltration didn't rely on attacker-owned infrastructure at all - using
 the Telegram Bot API let the attacker receive stolen data in real time while
 blending into legitimate HTTPS traffic to a trusted domain (`api.telegram.org`),
 which is harder to flag than a lookalike C2 domain would be.
