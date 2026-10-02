@@ -18,9 +18,9 @@ An attacker compromised a server and used it to host a cloned login page imperso
 
 ### Kit structure
 The archive extracts into several directories: `src`, `log`, `metamask`, `images`, `.github`, `_next`, and `cgi-bin`, plus site logo images. The `.github` folder contains `.yml`/`.md` CI-config and code-of-conduct files,suggesting the base template was cloned or forked from a legitimate open-source project rather than built from scratch. The actual phishing logic lives in `metamask/`:
-- `index.html` — cloned PancakeSwap/MetaMask landing page
-- `metamask.php` — backend handler that captures and exfiltrates submitted data
-- `log/log.txt` — local copy of every harvested submission
+- `index.html` - cloned PancakeSwap/MetaMask landing page
+- `metamask.php` - backend handler that captures and exfiltrates submitted data
+- `log/log.txt` - local copy of every harvested submission
 
 ### Lure
 - **Brand impersonated:** PancakeSwap / MetaMask (wallet seed-phrase prompt)
@@ -29,8 +29,8 @@ The archive extracts into several directories: `src`, `log`, `metamask`, `images
 
 ### Credential harvesting & exfiltration
 `metamask.php` captures the submitted wallet seed phrase (`$_POST['data']`) along with the victim's IP, geolocated country/city, and browser user-agent, then pushes it through **two parallel channels**:
-1. **Local log file** — appended to `log/log.txt` via `file_put_contents()`
-2. **Real-time alert** — sent via `sendTel()`, which calls the Telegram Bot
+1. **Local log file** - appended to `log/log.txt` via `file_put_contents()`
+2. **Real-time alert** - sent via `sendTel()`, which calls the Telegram Bot
 API's `sendMessage` endpoint (`api.telegram.org/bot<token>/sendMessage`) with the data URL-encoded into the message body
 
 The kit also queries `api.sypexgeo.net`, a third-party IP-geolocation service, using the victim's `REMOTE_ADDR` to enrich each captured submission with country and city before sending it to the attacker.
@@ -38,7 +38,7 @@ The kit also queries `api.sypexgeo.net`, a third-party IP-geolocation service, u
 ### Threat actor intel
 - **Telegram Bot Token:** `5457463144:AAG8t4k7e2ew3tTi0IBShcWbSia0Irvxm10`
 - **Telegram Chat ID:** `5442785564`
-- **Signed alias:** a comment block in `metamask.php` reads "With love and respect to all the hustlers out there... Regards, **j1j1b1s@m3r0**" — a self-attribution left by the kit's author/distributor
+- **Signed alias:** a comment block in `metamask.php` reads "With love and respect to all the hustlers out there... Regards, **j1j1b1s@m3r0**" - a self-attribution left by the kit's author/distributor
 - No hosting domain or server IP was identified in the reviewed files
 
 ### IOC Table
@@ -54,10 +54,10 @@ The kit also queries `api.sypexgeo.net`, a third-party IP-geolocation service, u
 ## MITRE ATT&CK Mapping
 | Tactic | Technique | Evidence |
 |---|---|---|
-| Initial Access | T1566.003 – Phishing via Service | Cloned PancakeSwap/MetaMask login page served to lure victims into submitting wallet seed phrases |
-| Credential Access | T1056.003 – Input Capture: Web Portal Capture | `metamask.php` captures the `data` field from the submitted form (`$_POST['data']`) |
-| Exfiltration | T1567 – Exfiltration Over Web Service | Harvested data sent via the Telegram Bot API (`sendMessage`), abusing a legitimate web service to evade network-based detection |
-| Discovery | T1016 – System Network Configuration Discovery | Kit queries `api.sypexgeo.net` with the victim's IP to resolve country/city before exfiltration |
+| Initial Access | T1566.003 - Phishing via Service | Cloned PancakeSwap/MetaMask login page served to lure victims into submitting wallet seed phrases |
+| Credential Access | T1056.003 - Input Capture: Web Portal Capture | `metamask.php` captures the `data` field from the submitted form (`$_POST['data']`) |
+| Exfiltration | T1567 - Exfiltration Over Web Service | Harvested data sent via the Telegram Bot API (`sendMessage`), abusing a legitimate web service to evade network-based detection |
+| Discovery | T1016 - System Network Configuration Discovery | Kit queries `api.sypexgeo.net` with the victim's IP to resolve country/city before exfiltration |
 
 ## Verdict & Escalation Ticket
 - **Severity:** High
