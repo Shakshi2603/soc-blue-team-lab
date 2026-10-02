@@ -28,6 +28,7 @@ The archive extracts into several directories: `src`, `log`, `metamask`, `images
 - **Delivery mechanism:** Cloned login page hosted on a compromised server
 
 ### Credential harvesting & exfiltration
+![metamask.php exfiltration logic](images/metamask-php.png)
 `metamask.php` captures the submitted wallet seed phrase (`$_POST['data']`) along with the victim's IP, geolocated country/city, and browser user-agent, then pushes it through **two parallel channels**:
 1. **Local log file** - appended to `log/log.txt` via `file_put_contents()`
 2. **Real-time alert** - sent via `sendTel()`, which calls the Telegram Bot
