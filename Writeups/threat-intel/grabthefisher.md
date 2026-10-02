@@ -1,4 +1,4 @@
-# GrabThePhisher — Threat Intel Investigation
+# GrabThePhisher - Threat Intel Investigation
 
 **Category:** Threat Intel | **Difficulty:** Easy | **Platform:** CyberDefenders
 **ATT&CK:** T1566.003 (Phishing via Service), T1056.003 (Input Capture: Web Portal), T1567 (Exfiltration Over Web Service), T1016 (System Network Configuration Discovery)
