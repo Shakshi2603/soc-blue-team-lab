@@ -1,4 +1,4 @@
-# 🛡️ SOC Incident Lab — Blue Team Home Lab Portfolio
+# 🛡️ SOC Incident Lab - Blue Team Home Lab Portfolio
 
 > A hands-on SOC analyst portfolio built from scratch. Real attacks. Real detection. Real documentation.
 
@@ -72,6 +72,15 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 | # | Exercise | APT Group | Status |
 |---|---|---|---|
 | TH-01 | [APT Simulation — TTP Hunt](./ThreatHunting/) | APT29 / Lazarus | ⏳ Upcoming |
+
+---
+
+## 🎯 Threat Intel Write-ups
+
+| Investigation | Source | Technique(s) | Link |
+|---|---|---|---|
+| Email Analysis — Malicious Attachment | LetsDefend | T1566.001, T1204.002, T1036 | [Report](Writeups/threat-intel/LetsDefend-EmailAnalysis.md) |
+| GrabThePhisher — Phishing Kit Analysis | CyberDefenders | T1566.003, T1056.003, T1567 | [Report](Writeups/threat-intel/grabthefisher.md) |
 
 ---
 
