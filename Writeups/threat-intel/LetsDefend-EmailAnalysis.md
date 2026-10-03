@@ -17,7 +17,6 @@ An email claiming to be a business inquiry ("united scientific equipment") was s
 |---|---|
 | 2021-02-08 23:15:11 -0800 | Email composed, `Date` header timestamp |
 | 2021-02-09 07:15:10 +0000 | Email received by mail server (`Received` header) |
-| 2026-10-03 | Email submitted for SOC analysis (lab exercise) |
 
 ## 3. Attack Methodology (MITRE ATT&CK)
 
