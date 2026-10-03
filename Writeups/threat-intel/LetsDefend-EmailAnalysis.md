@@ -1,7 +1,6 @@
 # Incident Report — Business Email Compromise / Malicious Attachment
 
 **Platform:** LetsDefend — Email Analysis Challenge
-**Badge:** Header Analyst
 **Date Investigated:** 2026-10-03
 **Analyst:** Shakshi Sona
 **Status:** TRUE POSITIVE — Escalated
