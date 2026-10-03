@@ -38,7 +38,7 @@ Date: 08 Feb 2021 23:15:11 -0800\
 **Key observations:**
 - `From` and `Return-Path` share the same address (`yanting@united.com.sg`) — no spoofing indicator here on its own.
 - The **real anomaly**: the `Received` line shows the message originated from IP `71.19.248.52`, which the receiving mail server could not resolve as belonging to `united.com.sg` (flagged `unknown`). This mismatch suggests either a spoofed `From` header or a compromised relay sending on the domain's behalf.
-- Geolocation of `71.19.248.52` resolves to Canada, inconsistent with a `.sg` (Singapore) business domain — a secondary supporting indicator, not conclusive on its own.
+- Geolocation of `71.19.248.52` resolves to Canada when checked on whatismyipaddress.com, inconsistent with a `.sg` (Singapore) business domain — a secondary supporting indicator, not conclusive on its own.
 - SPF/DKIM/DMARC alignment results were not available in the lab artifact; in a live environment this would be the first thing pulled to confirm the spoofing hypothesis.
 
 ## 5. Threat Intelligence Enrichment
