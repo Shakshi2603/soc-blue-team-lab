@@ -8,7 +8,7 @@
 
 This is not a tutorial-following exercise. This is a SOC home lab where I simulate attacks, detect them across multiple SIEM platforms, write custom detection rules, and document everything in NIST Incident Response format.
 
-Built by a BTech student at NIT Hamirpur who is actively transitioning into cybersecurity — starting with blue team and SOC operations.
+Built by a BTech student at NIT Hamirpur who is actively transitioning into cybersecurity - starting with blue team and SOC operations.
 
 ---
 
@@ -37,7 +37,7 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 | Platform | Purpose |
 |---|---|
 | **Wazuh 4.7** | Primary SIEM + XDR + Active Response |
-| **Microsoft Sentinel** | Cloud SIEM — KQL queries and workbooks |
+| **Microsoft Sentinel** | Cloud SIEM - KQL queries and workbooks |
 | **Splunk Free** | Log analysis + SPL queries |
 
 ---
@@ -48,7 +48,7 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 
 | # | Investigation | MITRE Technique | Status |
 |---|---|---|---|
-| AD-01 | [AD Enumeration — BloodHound & LDAP Recon](./ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | DONE |
+| AD-01 | [AD Enumeration - BloodHound & LDAP Recon](./ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | DONE |
 | AD-02 | [Kerberoasting Attack + Detection](./ActiveDirectory/Incident-AD-02-Kerberoasting/) | T1558.003 | DONE |
 | AD-03 | [AS-REP Roasting](./ActiveDirectory/Incident-AD-03-ASREPRoasting/) | T1558.004 | ⏳ IN PROGRESS |
 | AD-04 | [Pass-the-Hash + Lateral Movement](./ActiveDirectory/Incident-AD-04-PassTheHash/) | T1550.002 | ⏳ IN PROGRESS |
@@ -64,14 +64,14 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 | 04 | [Web Vulnerability Scan](./Linux-Incidents/Incident-04-WebVulnScan/) | T1595.002 | ⏳ Upcoming |
 | 05 | [Reverse Shell Attack](./Linux-Incidents/Incident-05-ReverseShell/) | T1059.004 | ⏳ Upcoming |
 | 06 | [Credential Sniffing](./Linux-Incidents/Incident-06-CredSniffing/) | T1040 | ⏳ Upcoming |
-| 07 | [Privilege Escalation — SUID/Cron](./Linux-Incidents/Incident-07-PrivEsc/) | T1548.001, T1053.003 | ⏳ Upcoming |
+| 07 | [Privilege Escalation - SUID/Cron](./Linux-Incidents/Incident-07-PrivEsc/) | T1548.001, T1053.003 | ⏳ Upcoming |
 | 08 | [Data Exfiltration](./Linux-Incidents/Incident-08-DataExfil/) | T1048, T1041 | ⏳ Upcoming |
 
 ### Threat Hunting
 
 | # | Exercise | APT Group | Status |
 |---|---|---|---|
-| TH-01 | [APT Simulation — TTP Hunt](./ThreatHunting/) | APT29 / Lazarus | ⏳ Upcoming |
+| TH-01 | [APT Simulation - TTP Hunt](./ThreatHunting/) | APT29 / Lazarus | ⏳ Upcoming |
 
 ---
 
@@ -79,8 +79,8 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 
 | Investigation | Source | Technique(s) | Link |
 |---|---|---|---|
-| Email Analysis — Malicious Attachment | LetsDefend | T1566.001, T1204.002, T1036 | [Report](Writeups/threat-intel/LetsDefend-EmailAnalysis.md) |
-| GrabThePhisher — Phishing Kit Analysis | CyberDefenders | T1566.003, T1056.003, T1567 | [Report](Writeups/threat-intel/grabthefisher.md) |
+| Email Analysis - Malicious Attachment | LetsDefend | T1566.001, T1204.002, T1036 | [Report](Writeups/threat-intel/LetsDefend-EmailAnalysis.md) |
+| GrabThePhisher - Phishing Kit Analysis | CyberDefenders | T1566.003, T1056.003, T1567 | [Report](Writeups/threat-intel/grabthefisher.md) |
 
 ---
 
@@ -124,6 +124,9 @@ SOC-Incident-Lab/
 │   ├── Incident-07-PrivEsc/
 │   └── Incident-08-DataExfil/
 ├── ThreatHunting/
+├── Writeups/
+    ├── threat-intel
+        ├── images/
 ├── rules/
 │   ├── sigma/
 │   │   ├── linux/
