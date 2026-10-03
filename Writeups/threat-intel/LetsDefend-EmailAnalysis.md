@@ -51,6 +51,8 @@ Date: 08 Feb 2021 23:15:11 -0800\
 | `yanting@united.com.sg` | hunter.io | No reputation data (lab sample) |
 | Attachment SHA256: `9909753bfb0ac8ab165bab3555233d03b01a9274a92e57c022f87ccbe51ca415` | VirusTotal | **59/70 vendors flagged malicious** — "trojan.msil/loki", families: Loki, AgentTesla |
 
+![VirusTotal detection result](images/virustotal.png)
+
 **Note:** IP and sender reputation came back clean because this is an archived lab sample rather than a live threat — expected for training data, but in a production SOC a clean reputation check on a newly-registered or rarely-seen sender would not clear the email; the attachment verdict overrides it.
 
 ## 6. IOC Table
