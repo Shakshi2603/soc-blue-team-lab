@@ -32,7 +32,7 @@ Received: from united.com.sg (unknown [71.19.248.52])\
 From: "Yan Ting" yanting@united.com.sg\
 To: admin@malware-traffic-analysis.net\
 Subject: united scientific equipment\
-Date: 08 Feb 2021 23:15:11 -0800\
+Date: 08 Feb 2021 23:15:11 -0800
 
 
 **Key observations:**
