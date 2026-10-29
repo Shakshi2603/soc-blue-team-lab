@@ -50,9 +50,8 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 |---|---|---|---|
 | AD-01 | [AD Enumeration - BloodHound & LDAP Recon](./ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | DONE |
 | AD-02 | [Kerberoasting Attack + Detection](./ActiveDirectory/Incident-AD-02-Kerberoasting/) | T1558.003 | DONE |
-| AD-03 | [AS-REP Roasting](./ActiveDirectory/Incident-AD-03-ASREPRoasting/) | T1558.004 | ⏳ IN PROGRESS |
-| AD-04 | [Pass-the-Hash + Lateral Movement](./ActiveDirectory/Incident-AD-04-PassTheHash/) | T1550.002 | ⏳ IN PROGRESS |
-| AD-KC | [Full AD Kill Chain Report](./ActiveDirectory/Incident-AD-KillChain/) | Multiple | ⏳ IN PROGRESS |
+| AD-03 | [AS-REP Roasting](./ActiveDirectory/Incident-AD-03-ASREPRoasting/) | T1558.004 | DONE |
+| AD-04 | [Pass-the-Hash + Lateral Movement](./ActiveDirectory/Incident-AD-04-PassTheHash/) | T1550.002 | DONE |
 
 ### Linux Incident Investigations
 
@@ -113,7 +112,6 @@ SOC-Incident-Lab/
 │   ├── Incident-AD-02-Kerberoasting/
 │   ├── Incident-AD-03-ASREPRoasting/
 │   ├── Incident-AD-04-PassTheHash/
-│   └── Incident-AD-KillChain/
 ├── Linux-Incidents/
 │   ├── Incident-01-PortScan/
 │   ├── Incident-02-SSHBruteForce/
