@@ -1,4 +1,4 @@
-# Active Directory — Phase 3 Setup & Attack Investigations
+# Active Directory - Setup & Attack Investigations
 
 ## Domain Configuration
 
@@ -23,7 +23,7 @@
 | Username | Role | Notes |
 |---|---|---|
 | jsmith | Standard domain user | Used as attacker's compromised account |
-| svc_backup | Service account | SPN registered — Kerberoastable |
+| svc_backup | Service account | SPN registered - Kerberoastable |
 
 ## SPNs Registered
 
@@ -46,4 +46,4 @@
 | AD-01 | BloodHound & LDAP Enumeration | T1069.002, T1087.002 | ✅ Complete |
 | AD-02 | Kerberoasting | T1558.003 | ✅ Complete |
 | AD-03 | AS-REP Roasting | T1558.004 | ⏳ Upcoming |
-| AD-04 | Pass-the-Hash | T1550.002 | ⏳ Upcoming |
+| AD-04 | Pass-the-Hash | T1550.002 | ✅ Complete |
