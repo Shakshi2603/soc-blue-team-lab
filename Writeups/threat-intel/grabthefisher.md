@@ -1,6 +1,6 @@
 # GrabThePhisher - Threat Intel Investigation
 
-**Category:** Threat Intel | **Difficulty:** Easy | **Platform:** CyberDefenders
+**Category:** Threat Intel | **Difficulty:** Easy | **Platform:** CyberDefenders \
 **ATT&CK:** T1566.003 (Phishing via Service), T1056.003 (Input Capture: Web Portal), T1567 (Exfiltration Over Web Service), T1016 (System Network Configuration Discovery)
 
 ## Scenario
@@ -24,7 +24,7 @@ The archive extracts into several directories: `src`, `log`, `metamask`, `images
 
 ### Lure
 - **Brand impersonated:** PancakeSwap / MetaMask (wallet seed-phrase prompt)
-- **Attacker hosting domain:** Not recoverable from the kit archive alone — no domain or server IP is hardcoded in the reviewed files
+- **Attacker hosting domain:** Not recoverable from the kit archive alone - no domain or server IP is hardcoded in the reviewed files
 - **Delivery mechanism:** Cloned login page hosted on a compromised server
 
 ### Credential harvesting & exfiltration
