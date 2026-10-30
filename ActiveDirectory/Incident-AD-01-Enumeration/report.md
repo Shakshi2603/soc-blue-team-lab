@@ -3,7 +3,7 @@
 **Investigation ID:** AD-01
 **Date:** June 2026
 **Analyst:** Shakshi
-**Lab Environment:** SOC.LAB (SOC Home Lab — VirtualBox)
+**Lab Environment:** SOC.LAB (SOC Home Lab - VirtualBox)
 **MITRE ATT&CK Techniques:** T1069.002 (Domain Groups), T1087.002 (Domain Account), TA0007 (Discovery)
 
 ---
@@ -12,7 +12,7 @@
 
 A simulated attacker on the Kali-Attacker host used valid low-privilege domain credentials (`jsmith`) to enumerate the SOC.LAB Active Directory domain via `bloodhound-python`. The collector queried the domain controller (DC01.SOC.LAB) over LDAP and successfully mapped the full object graph: 11 users, 52 groups, 4 OUs, 2 GPOs, 19 containers, and 3 domain-joined computers. The resulting BloodHound graph revealed a viable attack path from low-privilege AD objects to Domain Admins, exposing a privilege escalation path that would not be obvious from a standard AD permissions review.
 
-This investigation demonstrates how a single compromised domain account — even one with no special privileges — can be used to fully map an Active Directory environment and surface escalation paths to full domain compromise, without triggering any alerts in a poorly instrumented environment.
+This investigation demonstrates how a single compromised domain account - even one with no special privileges - can be used to fully map an Active Directory environment and surface escalation paths to full domain compromise, without triggering any alerts in a poorly instrumented environment.
 
 ## 2. Timeline of Events
 
@@ -33,12 +33,12 @@ This investigation demonstrates how a single compromised domain account — even
 bloodhound-python -u jsmith -p 'Password123!' -d SOC.LAB -ns 192.168.10.10 -c All
 ```
 
-This performs LDAP-based collection using the credentials of a standard domain user — no elevated privileges are required to enumerate the majority of an AD environment by default. The `-c All` flag collects every available data category: users, groups, computers, GPOs, OUs, ACLs, sessions, and trusts.
+This performs LDAP-based collection using the credentials of a standard domain user - no elevated privileges are required to enumerate the majority of an AD environment by default. The `-c All` flag collects every available data category: users, groups, computers, GPOs, OUs, ACLs, sessions, and trusts.
 
 **MITRE ATT&CK mapping:**
-- **T1087.002 — Account Discovery: Domain Account:** enumeration of all 11 domain user accounts via LDAP
-- **T1069.002 — Permission Groups Discovery: Domain Groups:** enumeration of 52 domain groups and their memberships
-- **TA0007 — Discovery (tactic):** overall reconnaissance phase preceding any credential theft or lateral movement
+- **T1087.002 - Account Discovery: Domain Account:** enumeration of all 11 domain user accounts via LDAP
+- **T1069.002 - Permission Groups Discovery: Domain Groups:** enumeration of 52 domain groups and their memberships
+- **TA0007 - Discovery (tactic):** overall reconnaissance phase preceding any credential theft or lateral movement
 
 After collection, the attacker loaded the data into BloodHound's Cypher query interface and traced inbound object control relationships. The resulting graph (see Evidence section) shows that members of `ENTERPRISE KEY ADMINS@SOC.LAB` and `KEY ADMINS@SOC.LAB` hold `AddKeyCredentialLink` rights on `DC01.SOC.LAB`. This risk allows an attacker to execute a Shadow Credentials attack, request a ticket granting ticket (TGT) as the domain controller account, and achieve full domain compromise.
 
@@ -67,11 +67,11 @@ INFO: Querying computer: DC01.SOC.LAB
 INFO: Done in 00M 09S
 ```
 
-This confirms the LDAP queries reached DC01 successfully and returned a complete, unfiltered view of the domain — no LDAP query throttling or anomaly detection intervened.
+This confirms the LDAP queries reached DC01 successfully and returned a complete, unfiltered view of the domain - no LDAP query throttling or anomaly detection intervened.
 
 **Screenshot references:**
-- `screenshots/bloodhound-collection.png` — full terminal output of the collection run
-- `screenshots/attackpath.png` — BloodHound Cypher graph showing svc_backup → Domain Admins attack path (COMPROMISE VALIDATED)
+- `screenshots/bloodhound-collection.png` - full terminal output of the collection run
+- `screenshots/attackpath.png` - BloodHound Cypher graph showing svc_backup → Domain Admins attack path (COMPROMISE VALIDATED)
 
 ## 5. Network Evidence
 
@@ -89,20 +89,20 @@ LDAP traffic was generated to DC01.SOC.LAB (192.168.10.10) on TCP port 389 durin
 
 ## 7. Root Cause
 
-The root cause is not a misconfiguration in the traditional sense — by default, any authenticated domain user can read most AD objects via LDAP. The real exposure is the **excessive permission chain** discovered during enumeration: `ENTERPRISE KEY ADMINS` and `KEY ADMINS` groups hold `AddKeyCredentialLink` on the domain controller computer object, which is a known Shadow Credentials abuse primitive. This was not something a standard AD audit would catch without graph-based analysis.
+The root cause is not a misconfiguration in the traditional sense - by default, any authenticated domain user can read most AD objects via LDAP. The real exposure is the **excessive permission chain** discovered during enumeration: `ENTERPRISE KEY ADMINS` and `KEY ADMINS` groups hold `AddKeyCredentialLink` on the domain controller computer object, which is a known Shadow Credentials abuse primitive. This was not something a standard AD audit would catch without graph-based analysis.
 
 ## 8. Impact Assessment
 
 **Severity: Medium (Reconnaissance), High (if escalation path is exploited)**
 
-On its own, AD enumeration does not compromise anything — but it gives an attacker a complete roadmap to domain compromise without needing to guess or brute-force their way through the environment. In this case, the enumeration directly revealed a path to Domain Admins, meaning a follow-on attack (Shadow Credentials abuse via `AddKeyCredentialLink`) could fully compromise the domain.
+On its own, AD enumeration does not compromise anything - but it gives an attacker a complete roadmap to domain compromise without needing to guess or brute-force their way through the environment. In this case, the enumeration directly revealed a path to Domain Admins, meaning a follow-on attack (Shadow Credentials abuse via `AddKeyCredentialLink`) could fully compromise the domain.
 
 ## 9. Recommendations
 
-1. **Enable LDAP query auditing** — Wazuh/Sysmon should be configured to detect anomalous query volume from a single account in a short time window (Event ID 4662 with object access auditing enabled).
+1. **Enable LDAP query auditing** - Wazuh/Sysmon should be configured to detect anomalous query volume from a single account in a short time window (Event ID 4662 with object access auditing enabled).
 2. **Restrict `AddKeyCredentialLink` rights** on sensitive computer objects (especially domain controllers) to only Tier-0 administrative accounts.
 3. **Deploy a BloodHound canary/honeypot object** to detect when enumeration tools are run against the domain.
-4. **Review `KEY ADMINS` and `ENTERPRISE KEY ADMINS` group membership** regularly — these groups are frequently overlooked in standard AD permission reviews.
+4. **Review `KEY ADMINS` and `ENTERPRISE KEY ADMINS` group membership** regularly - these groups are frequently overlooked in standard AD permission reviews.
 5. **Rate-limit or alert on LDAP queries** that retrieve excessive object counts in a short timeframe from non-service accounts.
 
 ## 10. Lessons Learned
