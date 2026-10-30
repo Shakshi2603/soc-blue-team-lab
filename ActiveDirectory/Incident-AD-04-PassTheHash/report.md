@@ -131,12 +131,12 @@ This transaction pattern is the post-exploitation fingerprint of smbexec. All th
 **Screenshot references:**
 
 ### Attack
-- `attack/mimikatz-hash-dump.png` - Mimikatz `sekurlsa::logonpasswords` output showing Jsmith NTLM hash extraction
-- `attack/smbexec-system-shell.png` - impacket-smbexec achieving `NT AUTHORITY\SYSTEM` shell on WindowsClient11 (192.168.10.21)
+- `attack/mimikatz-dump.png` - Mimikatz `sekurlsa::logonpasswords` output showing Jsmith NTLM hash extraction
+- `attack/smbexec-shell.png` - impacket-smbexec achieving `NT AUTHORITY\SYSTEM` shell on WindowsClient11 (192.168.10.21)
 
 ### Detection
-- `detection/splunk-4624-ntlm-logon.png` - Splunk SPL showing 4 Event ID 4624 NTLM Logon Type 3 events from 192.168.10.5 as Jsmith
-- `detection/splunk-4776-credential-validation.png` - Splunk Event ID 4776 showing NTLM credential validation for Jsmith and Administrator at DC01.SOC.LAB
+- `detection/splunk-ntlm-logon.png` - Splunk SPL showing 4 Event ID 4624 NTLM Logon Type 3 events from 192.168.10.5 as Jsmith
+- `detection/splunk-credential-validation.png` - Splunk Event ID 4776 showing NTLM credential validation for Jsmith and Administrator at DC01.SOC.LAB
 - `detection/splunk-transaction-smbexec.png` - Splunk transaction query correlating service creation + executable drop + cmd execution within 2-minute window on WindowsClient11
 
 ## 5. Network Evidence
