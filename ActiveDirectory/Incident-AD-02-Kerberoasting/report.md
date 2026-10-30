@@ -3,7 +3,7 @@
 **Investigation ID:** AD-02
 **Date:** June 2026
 **Analyst:** Shakshi
-**Lab Environment:** SOC.LAB (SOC Home Lab — VirtualBox)
+**Lab Environment:** SOC.LAB (SOC Home Lab - VirtualBox)
 **MITRE ATT&CK Technique:** T1558.003 - Steal or Forge Kerberos Tickets: Kerberoasting (TA0006 Credential Access)
 
 ---
