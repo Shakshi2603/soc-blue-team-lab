@@ -70,8 +70,8 @@ INFO: Done in 00M 09S
 This confirms the LDAP queries reached DC01 successfully and returned a complete, unfiltered view of the domain — no LDAP query throttling or anomaly detection intervened.
 
 **Screenshot references:**
-- `screenshots/bloodhound-python-output.png` — full terminal output of the collection run
-- `screenshots/shortest-path-to-DA.png` — BloodHound Cypher graph showing the GenericWrite/AddKeyCredentialLink/CoerceToTGT path from low-privilege groups to DOMAIN ADMINS@SOC.LAB
+- `screenshots/bloodhound-collection.png` — full terminal output of the collection run
+- `screenshots/attackpath.png` — BloodHound Cypher graph showing svc_backup → Domain Admins attack path (COMPROMISE VALIDATED)
 
 ## 5. Network Evidence
 

@@ -100,10 +100,16 @@ This is the precise detection signature documented in the lab's detection plan: 
 Rule `100011` was kept in place as a parsing-verification fallback to confirm that 4769 events were reaching Wazuh at all, separate from the RC4-specific detection logic in rule `100010`. This was a deliberate debugging decision during rule development and is worth keeping as a sanity-check rule even post-tuning.
 
 **Screenshot references:**
-- `screenshots/getuserspns-output.png` — Impacket output identifying and requesting the SPN ticket
-- `screenshots/kerberoast-hash-extracted.png` — extracted `$krb5tgs$23$...` hash confirmed via `cat`
-- `screenshots/hashcat-cracked.png` — Hashcat recovering the plaintext password
-- `screenshots/wazuh-4769-rc4-detection.png` — raw Wazuh log confirming detection of the RC4 ticket request
+
+### Attack
+- `attack/user-spn-output.png` — Impacket GetUserSPNs identifying svc_backup and requesting TGS
+- `attack/kerberoast-hash-extracted.png` — extracted `$krb5tgs$23$...` hash confirmed via `cat`
+- `attack/hashcat-cracked.png` — Hashcat recovering plaintext: Back2024!
+
+### Detection
+- `detection/wazuhproof.png` — Wazuh Discover query filtered on Event ID 4769, showing jsmith→svc_backup hits
+- `detection/kerberoating.png` — Wazuh filtered view with ticketEncryptionType 0x17 highlighted across all 8 hits
+- `detection/splunkproof.png` — Splunk SPL stats showing jsmith with 3 unique SPNs and 17 events, anomalous against machine account baseline
 
 ## 5. Network Evidence
 
