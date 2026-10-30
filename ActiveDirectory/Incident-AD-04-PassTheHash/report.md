@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-Using a low-privilege domain account (`Jsmith`) with local administrator rights on a compromised Windows workstation, the attacker ran Mimikatz to dump NTLM credential hashes from LSASS memory without ever recovering the plaintext password. The extracted NTLM hash (`2b576acbe6bcfda7294d6bd18041b8fe`) was passed directly to Impacket's `smbexec` tool to authenticate to a second machine (WindowsClient11, 192.168.10.21) over SMB — achieving a `NT AUTHORITY\SYSTEM` interactive shell with no password required.
+Using a low-privilege domain account (`Jsmith`) with local administrator rights on a compromised Windows workstation, the attacker ran Mimikatz to dump NTLM credential hashes from LSASS memory without ever recovering the plaintext password. The extracted NTLM hash (`2b576acbe6bcfda7294d6bd18041b8fe`) was passed directly to Impacket's `smbexec` tool to authenticate to a second machine (WindowsClient11, 192.168.10.21) over SMB - achieving a `NT AUTHORITY\SYSTEM` interactive shell with no password required.
 
 This investigation demonstrates a complete credential access → lateral movement chain: credential dumping from memory (T1003.001) feeding directly into Pass-the-Hash (T1550.002), bypassing password cracking entirely. Unlike Kerberoasting (AD-02), PtH requires no offline cracking phase - the hash itself is a valid authentication token in NTLM. Detection required correlating three distinct event types in Splunk: LSASS access (credential dumping), NTLM network logon (Event ID 4624 Logon Type 3), and post-exploitation activity on the target host.
 
