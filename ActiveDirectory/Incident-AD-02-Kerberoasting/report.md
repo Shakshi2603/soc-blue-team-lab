@@ -4,13 +4,13 @@
 **Date:** June 2026
 **Analyst:** Shakshi
 **Lab Environment:** SOC.LAB (SOC Home Lab — VirtualBox)
-**MITRE ATT&CK Technique:** T1558.003 — Steal or Forge Kerberos Tickets: Kerberoasting (TA0006 Credential Access)
+**MITRE ATT&CK Technique:** T1558.003 - Steal or Forge Kerberos Tickets: Kerberoasting (TA0006 Credential Access)
 
 ---
 
 ## 1. Executive Summary
 
-Using valid low-privilege domain credentials (`jsmith`), a simulated attacker requested a Kerberos service ticket (TGS) for the `svc_backup` service account, which is configured with a Service Principal Name (SPN) and is therefore "Kerberoastable." The ticket was extracted via Impacket's `GetUserSPNs` tool, saved offline, and cracked using Hashcat in approximately the runtime of a standard rule-based attack, recovering the plaintext password `Back2024!`. This investigation confirms that any domain account with an SPN and a weak or reused password is a direct credential-theft target requiring no privilege escalation or exploitation — only a valid, low-privilege domain logon.
+Using valid low-privilege domain credentials (`jsmith`), a simulated attacker requested a Kerberos service ticket (TGS) for the `svc_backup` service account, which is configured with a Service Principal Name (SPN) and is therefore "Kerberoastable." The ticket was extracted via Impacket's `GetUserSPNs` tool, saved offline, and cracked using Hashcat in approximately the runtime of a standard rule-based attack, recovering the plaintext password `Back2024!`. This investigation confirms that any domain account with an SPN and a weak or reused password is a direct credential-theft target requiring no privilege escalation or exploitation - only a valid, low-privilege domain logon.
 
 The attack was successfully detected via custom Wazuh and splunk correlation rule built specifically to flag Kerberos service ticket requests (Event ID 4769) using RC4-HMAC encryption (`ticketEncryptionType: 0x17`), which is the well-known signature of a Kerberoasting request, since RC4 tickets are intentionally requested by attackers over the stronger AES default in order to enable faster offline cracking.
 
@@ -30,14 +30,14 @@ The attack was successfully detected via custom Wazuh and splunk correlation rul
 
 **Tools:** Impacket (`GetUserSPNs`), Hashcat
 
-**Step 1 — Identify and request the SPN ticket:**
+**Step 1 - Identify and request the SPN ticket:**
 ```bash
 impacket-GetUserSPNs SOC.LAB/jsmith:Password123! -dc-ip 192.168.10.10 -request -outputfile kerberoast.hash
 ```
 
-This authenticates as `jsmith`, queries the domain for all accounts with a registered SPN, and requests a TGS for each one found. The domain controller has no way to distinguish this from a legitimate service ticket request — any authenticated user can request a TGS for any SPN-registered account, by design of the Kerberos protocol.
+This authenticates as `jsmith`, queries the domain for all accounts with a registered SPN, and requests a TGS for each one found. The domain controller has no way to distinguish this from a legitimate service ticket request - any authenticated user can request a TGS for any SPN-registered account, by design of the Kerberos protocol.
 
-**Step 2 — Crack the extracted hash offline:**
+**Step 2 - Crack the extracted hash offline:**
 ```bash
 hashcat -m 13100 kerberoast.hash --show
 ```
@@ -50,12 +50,12 @@ svc_backup : Back2024!
 **Why this works:** The `svc_backup` account was deliberately configured (Phase 1, Day 4B) with an SPN via `setspn`, making it eligible for Kerberoasting. Because the account's password was set to a value crackable within a standard wordlist/rule attack, the ticket's RC4-HMAC encryption was reversible in a practical timeframe.
 
 **MITRE ATT&CK mapping:**
-- **T1558.003 — Steal or Forge Kerberos Tickets: Kerberoasting**
-- **TA0006 — Credential Access** (tactic)
+- **T1558.003 - Steal or Forge Kerberos Tickets: Kerberoasting**
+- **TA0006 - Credential Access** (tactic)
 
 ## 4. Log Evidence
 
-**Raw Wazuh alert (Event ID 4769) — RC4 Kerberoasting indicator:**
+**Raw Wazuh alert (Event ID 4769) - RC4 Kerberoasting indicator:**
 ```json
 "data": {
   "win": {
@@ -102,18 +102,18 @@ Rule `100011` was kept in place as a parsing-verification fallback to confirm th
 **Screenshot references:**
 
 ### Attack
-- `attack/user-spn-output.png` — Impacket GetUserSPNs identifying svc_backup and requesting TGS
-- `attack/kerberoast-hash-extracted.png` — extracted `$krb5tgs$23$...` hash confirmed via `cat`
-- `attack/hashcat-cracked.png` — Hashcat recovering plaintext: Back2024!
+- `attack/user-spn-output.png` - Impacket GetUserSPNs identifying svc_backup and requesting TGS
+- `attack/kerberoast-hash-extracted.png` - extracted `$krb5tgs$23$...` hash confirmed via `cat`
+- `attack/hashcat-cracked.png` - Hashcat recovering plaintext: Back2024!
 
 ### Detection
-- `detection/wazuhproof.png` — Wazuh Discover query filtered on Event ID 4769, showing jsmith→svc_backup hits
-- `detection/kerberoating.png` — Wazuh filtered view with ticketEncryptionType 0x17 highlighted across all 8 hits
-- `detection/splunkproof.png` — Splunk SPL stats showing jsmith with 3 unique SPNs and 17 events, anomalous against machine account baseline
+- `detection/wazuhproof.png` - Wazuh Discover query filtered on Event ID 4769, showing jsmith→svc_backup hits
+- `detection/kerberoating.png` - Wazuh filtered view with ticketEncryptionType 0x17 highlighted across all 8 hits
+- `detection/splunkproof.png` - Splunk SPL stats showing jsmith with 3 unique SPNs and 17 events, anomalous against machine account baseline
 
 ## 5. Network Evidence
 
-A Kerberos TGS-REQ/TGS-REP exchange occurred between 192.168.10.5 (Kali-Attacker) and 192.168.10.10 (DC01.SOC.LAB) on TCP/UDP port 88. *(Reference `pcaps/kerberoasting.pcap` here with a note on the AS-REQ/TGS-REQ message types visible in Wireshark, and the absence of a prior AS-REQ for a new TGT — since `jsmith` already had a valid TGT cached — which can itself be a secondary detection point.)*
+A Kerberos TGS-REQ/TGS-REP exchange occurred between 192.168.10.5 (Kali-Attacker) and 192.168.10.10 (DC01.SOC.LAB) on TCP/UDP port 88. *(Reference `pcaps/kerberoasting.pcap` here with a note on the AS-REQ/TGS-REQ message types visible in Wireshark, and the absence of a prior AS-REQ for a new TGT - since `jsmith` already had a valid TGT cached - which can itself be a secondary detection point.)*
 
 ## 6. IOC Table
 
@@ -129,7 +129,7 @@ A Kerberos TGS-REQ/TGS-REP exchange occurred between 192.168.10.5 (Kali-Attacker
 
 ## 7. Root Cause
 
-Two compounding factors enabled this attack: (1) the `svc_backup` account was registered with an SPN, making it a valid Kerberoasting target by protocol design, and (2) the account's password (`Back2024!`) was within the range crackable by a standard offline attack. Kerberoasting itself cannot be fully prevented since SPN-registered accounts must support ticket issuance — the real control point is password strength and ticket encryption type enforcement.
+Two compounding factors enabled this attack: (1) the `svc_backup` account was registered with an SPN, making it a valid Kerberoasting target by protocol design, and (2) the account's password (`Back2024!`) was within the range crackable by a standard offline attack. Kerberoasting itself cannot be fully prevented since SPN-registered accounts must support ticket issuance - the real control point is password strength and ticket encryption type enforcement.
 
 ## 8. Impact Assessment
 
@@ -145,12 +145,12 @@ In a production environment, immediate containment would include disabling jsmit
 
 1. **Enforce AES encryption for Kerberos service tickets** domain-wide via Group Policy (`msDS-SupportedEncryptionTypes`), removing RC4 as a viable downgrade option for ticket requests.
 2. **Set strong, randomly generated passwords (25+ characters) for all service accounts**, or migrate to **Group Managed Service Accounts (gMSA)**, which rotate passwords automatically and are effectively immune to offline cracking.
-3. **Monitor and alert on all 4769 events with RC4 encryption type**, especially against accounts with SPNs — this is exactly what rule 100010 implements, and it should be tuned for low false-positive volume in larger environments with many legacy services.
+3. **Monitor and alert on all 4769 events with RC4 encryption type**, especially against accounts with SPNs - this is exactly what rule 100010 implements, and it should be tuned for low false-positive volume in larger environments with many legacy services.
 4. **Audit which accounts hold SPNs** regularly using `setspn -Q */*`, and remove SPNs from accounts that don't strictly require them.
 5. **Restrict privileges of all service accounts** to the minimum necessary (least privilege), so that even if Kerberoasted, the blast radius is limited.
 
 ## 11. Lessons Learned
 
-This was the most valuable investigation in the lab so far because it demonstrates the full attacker-to-defender loop: understanding *why* Kerberoasting works at the protocol level (any authenticated user can request a TGS for any SPN), reproducing the attack accurately, and then writing a detection rule that targets the specific technical signature (RC4 encryption type) rather than just alerting on "Kerberos ticket requested," which would be far too noisy in a real environment. Building the fallback rule (100011) was also a useful lesson in detection engineering discipline — verifying that the underlying event is even reaching the SIEM before assuming a more specific rule's silence means "no attack," rather than "broken log pipeline."
+This was the most valuable investigation in the lab so far because it demonstrates the full attacker-to-defender loop: understanding *why* Kerberoasting works at the protocol level (any authenticated user can request a TGS for any SPN), reproducing the attack accurately, and then writing a detection rule that targets the specific technical signature (RC4 encryption type) rather than just alerting on "Kerberos ticket requested," which would be far too noisy in a real environment. Building the fallback rule (100011) was also a useful lesson in detection engineering discipline - verifying that the underlying event is even reaching the SIEM before assuming a more specific rule's silence means "no attack," rather than "broken log pipeline."
 
 **Note:** During testing, the SPN was briefly observed registered against an incorrect domain suffix due to a `setspn` configuration error in Phase 1. This was corrected to `HTTP/backupserver.soc.lab` prior to finalizing this report; if revisiting `setspn` commands in future lab phases, always confirm the domain suffix matches the lab's actual domain (`SOC.LAB`) before registering new SPNs.
