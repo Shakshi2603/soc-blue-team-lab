@@ -1,9 +1,9 @@
 # Incident AD-02: RDP Brute Force Attack Against Domain Controller
 
-**Investigation ID:** AD-02
-**Date:** July 2026
-**Analyst:** Shakshi
-**Lab Environment:** SOC.LAB (SOC Home Lab - VirtualBox)
+**Investigation ID:** AD-02 \
+**Date:** July 2026 \
+**Analyst:** Shakshi \
+**Lab Environment:** SOC.LAB (SOC Home Lab - VirtualBox) \
 **MITRE ATT&CK Techniques:** T1110.001 (Brute Force: Password Guessing), T1021.001 (Remote Services: Remote Desktop Protocol), TA0006 (Credential Access), TA0008 (Lateral Movement)
 
 ---
