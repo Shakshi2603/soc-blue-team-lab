@@ -45,6 +45,6 @@
 |---|---|---|---|
 | AD-01 | BloodHound & LDAP Enumeration | T1069.002, T1087.002 | ✅ Complete |
 | AD-02 | Kerberoasting | T1558.003 | ✅ Complete |
-| AD-03 | AS-REP Roasting | T1558.004 | ⏳ Upcoming |
-| AD-04 | Pass-the-Hash | T1550.002 | ✅ Complete |
+| AD-03 | Pass-the-Hash | T1550.002 | ✅ Complete |
+| AD-04 | AS-REP Roasting — Protocol Persistence | T1558.004 | ✅ Complete |
 | AD-05 | RDP Brute Force | T1110.001, T1021.001 | ✅ Complete |

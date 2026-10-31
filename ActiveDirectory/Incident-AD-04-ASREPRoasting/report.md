@@ -1,6 +1,6 @@
 # Incident AD-03: AS-REP Roasting — Offline Credential Theft via Disabled Pre-Authentication
 
-**Investigation ID:** AD-03
+**Investigation ID:** AD-04
 **Date:** July 2026
 **Analyst:** Shakshi
 **Lab Environment:** SOC.LAB (SOC Home Lab — VirtualBox)
