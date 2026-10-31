@@ -47,3 +47,4 @@
 | AD-02 | Kerberoasting | T1558.003 | ✅ Complete |
 | AD-03 | AS-REP Roasting | T1558.004 | ⏳ Upcoming |
 | AD-04 | Pass-the-Hash | T1550.002 | ✅ Complete |
+| AD-05 | RDP Brute Force | T1110.001, T1021.001 | ✅ Complete |

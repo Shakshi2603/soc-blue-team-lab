@@ -52,6 +52,7 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 | AD-02 | [Kerberoasting Attack + Detection](./ActiveDirectory/Incident-AD-02-Kerberoasting/) | T1558.003 | DONE |
 | AD-03 | [AS-REP Roasting](./ActiveDirectory/Incident-AD-03-ASREPRoasting/) | T1558.004 | DONE |
 | AD-04 | [Pass-the-Hash + Lateral Movement](./ActiveDirectory/Incident-AD-04-PassTheHash/) | T1550.002 | DONE |
+| AD-05 | [RDP Brute Force Against Domain Controller](./ActiveDirectory/Incident-AD-05-RDPBruteForce/) | T1110.001, T1021.001 | DONE |
 
 ### Linux Incident Investigations
 
