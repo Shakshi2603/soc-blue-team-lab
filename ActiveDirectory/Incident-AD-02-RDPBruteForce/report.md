@@ -1,6 +1,6 @@
-# Incident AD-05: RDP Brute Force Attack Against Domain Controller
+# Incident AD-02: RDP Brute Force Attack Against Domain Controller
 
-**Investigation ID:** AD-05
+**Investigation ID:** AD-02
 **Date:** July 2026
 **Analyst:** Shakshi
 **Lab Environment:** SOC.LAB (SOC Home Lab — VirtualBox)

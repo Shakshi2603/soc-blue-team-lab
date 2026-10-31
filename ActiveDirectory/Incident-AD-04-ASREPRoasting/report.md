@@ -1,4 +1,4 @@
-# Incident AD-03: AS-REP Roasting — Offline Credential Theft via Disabled Pre-Authentication
+# Incident AD-04: AS-REP Roasting — Offline Credential Theft via Disabled Pre-Authentication
 
 **Investigation ID:** AD-04
 **Date:** July 2026

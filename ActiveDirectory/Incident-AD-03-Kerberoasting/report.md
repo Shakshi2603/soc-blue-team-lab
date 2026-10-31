@@ -1,6 +1,6 @@
-# Incident AD-02: Kerberoasting Attack Against Service Account
+# Incident AD-03: Kerberoasting Attack Against Service Account
 
-**Investigation ID:** AD-02
+**Investigation ID:** AD-03
 **Date:** June 2026
 **Analyst:** Shakshi
 **Lab Environment:** SOC.LAB (SOC Home Lab - VirtualBox)

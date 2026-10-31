@@ -44,15 +44,17 @@ Built by a BTech student at NIT Hamirpur who is actively transitioning into cybe
 
 ## 🔍 Investigation Index
 
-### Active Directory Attacks
+### Active Directory Attacks — Complete Kill Chain
 
-| # | Investigation | MITRE Technique | Status |
-|---|---|---|---|
-| AD-01 | [AD Enumeration - BloodHound & LDAP Recon](./ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | DONE |
-| AD-02 | [Kerberoasting Attack + Detection](./ActiveDirectory/Incident-AD-02-Kerberoasting/) | T1558.003 | DONE |
-| AD-03 | [Pass-the-Hash + Lateral Movement](./ActiveDirectory/Incident-AD-03-PassTheHash/) | T1550.002 | DONE |
-| AD-04 | [AS-REP Roasting — Protocol Persistence](./ActiveDirectory/Incident-AD-04-ASREPRoasting/) | T1558.004 | DONE |
-| AD-05 | [RDP Brute Force Against Domain Controller](./ActiveDirectory/Incident-AD-05-RDPBruteForce/) | T1110.001, T1021.001 | DONE |
+> These five investigations tell one complete attacker story: from domain recon → initial access via brute force → Kerberos credential theft → protocol-level persistence → lateral movement to SYSTEM.
+
+| Kill Chain Step | ID | Investigation | MITRE Technique | Status |
+|---|---|---|---|---|
+| Reconnaissance | AD-01 | [BloodHound & LDAP Enumeration](./ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | ✅ DONE |
+| Initial Access | AD-02 | [RDP Brute Force Against Domain Controller](./ActiveDirectory/Incident-AD-02-RDPBruteForce/) | T1110.001, T1021.001 | ✅ DONE |
+| Credential Access | AD-03 | [Kerberoasting Service Account](./ActiveDirectory/Incident-AD-03-Kerberoasting/) | T1558.003 | ✅ DONE |
+| Persistence | AD-04 | [AS-REP Roasting — Protocol-Level Backdoor](./ActiveDirectory/Incident-AD-04-ASREPRoasting/) | T1558.004 | ✅ DONE |
+| Lateral Movement | AD-05 | [Pass-the-Hash via Mimikatz + smbexec](./ActiveDirectory/Incident-AD-05-PassTheHash/) | T1550.002 | ✅ DONE |
 
 ### Linux Incident Investigations
 
@@ -109,10 +111,11 @@ SOC-Incident-Lab/
 │   ├── lab-diagram.png          # Full lab topology diagram
 │   └── mitre-navigator-layer.json
 ├── ActiveDirectory/
-│   ├── Incident-AD-01-Enumeration/
-│   ├── Incident-AD-02-Kerberoasting/
-│   ├── Incident-AD-03-PassTheHash/
-│   ├── Incident-AD-04-ASREPRoasting/
+│   ├── Incident-AD-01-Enumeration/      # Reconnaissance
+│   ├── Incident-AD-02-RDPBruteForce/    # Initial Access
+│   ├── Incident-AD-03-Kerberoasting/    # Credential Access
+│   ├── Incident-AD-04-ASREPRoasting/    # Persistence
+│   ├── Incident-AD-05-PassTheHash/      # Lateral Movement
 ├── Linux-Incidents/
 │   ├── Incident-01-PortScan/
 │   ├── Incident-02-SSHBruteForce/

@@ -1,6 +1,6 @@
-# Incident AD-04: Pass-the-Hash Lateral Movement via Impacket smbexec
+# Incident AD-05: Pass-the-Hash Lateral Movement via Impacket smbexec
 
-**Investigation ID:** AD-03
+**Investigation ID:** AD-05
 **Date:** July 2026
 **Analyst:** Shakshi
 **Lab Environment:** SOC.LAB (SOC Home Lab - VirtualBox)
