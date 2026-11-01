@@ -87,7 +87,7 @@ The critical detection field is `preAuthType = 0`, meaning no pre-authentication
     <field name="win.system.eventID">^4768$</field>
     <field name="win.eventdata.preAuthType">^0$</field>
     <field name="win.eventdata.targetUserName">!.*\$$</field>
-    <description>AD Security: AS-REP Roasting attempt detected — Kerberos TGT issued without pre-authentication for a user account.</description>
+    <description>AD Security: AS-REP Roasting attempt detected - Kerberos TGT issued without pre-authentication for a user account.</description>
     <group>credential_access,mitre_t1558.004</group>
 </rule>
 ```
