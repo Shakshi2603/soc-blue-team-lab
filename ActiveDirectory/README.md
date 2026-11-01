@@ -7,10 +7,10 @@ This directory contains five controlled investigations performed in the isolated
 | Component | Details |
 |---|---|
 | Domain | `SOC.LAB` |
-| Domain controller | `DC01.SOC.LAB` — Windows Server 2022 — `192.168.10.10` |
+| Domain controller | `DC01.SOC.LAB` - Windows Server 2022 - `192.168.10.10` |
 | Windows 10 workstation | `192.168.10.20` |
 | Windows 11 workstation | `192.168.10.21` |
-| Attacker VM | Kali Linux — `192.168.10.5` |
+| Attacker VM | Kali Linux - `192.168.10.5` |
 | Primary monitoring | Wazuh; Splunk evidence is included in selected investigations |
 
 All names, addresses, accounts, and credentials in these reports are synthetic lab data. Secrets and reusable credential material are intentionally redacted from the public documentation.
