@@ -21,7 +21,7 @@ AS-REP Roasting is distinct from Kerberoasting (AD-03) in a critical way: it req
 | Pre-attack | `jsmith` account configured with `DoesNotRequirePreAuth = True` via PowerShell on DC01 |
 | T+0:00 | Attacker creates `users.txt` on Kali-Attacker containing target username `jsmith` |
 | T+0:00 | `impacket-GetNPUsers SOC.LAB/ -usersfile users.txt -dc-ip 192.168.10.10 -no-pass` executes |
-| T+0:00 | DC01 returns AS-REP encrypted with jsmith's password hash — no credential check performed |
+| T+0:00 | DC01 returns AS-REP encrypted with jsmith's password hash - no credential check performed |
 | T+0:00 | Hash saved to `asrep.hash` in `$krb5asrep$23$jsmith@SOC.LAB:...` format |
 | T+0:00 | Wazuh rule 100030 fires: Event ID 4768 with preAuthType 0 detected |
 | T+0:09 | `hashcat -m 18200 asrep.hash /usr/share/wordlists/rockyou.txt` recovers: `<LAB_PASSWORD_REDACTED>` |
