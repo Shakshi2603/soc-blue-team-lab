@@ -26,7 +26,7 @@ An email claiming to be a business inquiry ("united scientific equipment") was s
 | User Execution: Malicious File | T1204.002 | Requires victim to open the attachment to detonate |
 | Masquerading | T1036 | Attachment filename ("united scientific equipment.exe") does not match the binary's internal name (`cDisplayClass300.exe`), indicating deliberate disguise |
 
-## 4. Log Evidence — Email Headers
+## 4. Log Evidence - Email Headers
 Return-Path: yanting@united.com.sg\
 Received: from united.com.sg (unknown [71.19.248.52])\
 From: "Yan Ting" yanting@united.com.sg\
