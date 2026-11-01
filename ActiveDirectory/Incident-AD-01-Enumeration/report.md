@@ -30,7 +30,7 @@ This investigation demonstrates how a single compromised domain account - even o
 
 **Command executed:**
 ```bash
-bloodhound-python -u jsmith -p 'Password123!' -d SOC.LAB -ns 192.168.10.10 -c All
+bloodhound-python -u jsmith -p '<LAB_PASSWORD_REDACTED>' -d SOC.LAB -ns 192.168.10.10 -c All
 ```
 
 This performs LDAP-based collection using the credentials of a standard domain user - no elevated privileges are required to enumerate the majority of an AD environment by default. The `-c All` flag collects every available data category: users, groups, computers, GPOs, OUs, ACLs, sessions, and trusts.
