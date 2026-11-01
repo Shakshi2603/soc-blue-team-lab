@@ -50,8 +50,8 @@ See the [Active Directory investigation index](ActiveDirectory/README.md).
 ### Detection content
 
 - [Wazuh local rules](rules/wazuh/local_rules.xml)
-- [Sigma — Active Directory](rules/sigma/ad/)
-- [Sigma — Linux](rules/sigma/linux/)
+- [Sigma - Active Directory](rules/sigma/ad/)
+- [Sigma - Linux](rules/sigma/linux/)
 
 The Sigma rules are marked experimental. Their log-source assumptions and field mappings should be validated against the target data source before operational use.
 
