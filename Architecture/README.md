@@ -27,7 +27,7 @@
 
 ## Network Design
 - All VMs connected via VirtualBox Host-Only Network (192.168.10.0/24)
-- Isolated environment — no internet access for victim/target machines
+- Isolated environment - no internet access for victim/target machines
 - Kali and Wazuh have NAT adapter for internet access
 - Domain: SOC.LAB
 - Wireshark running on Kali to capture all inter-VM traffic
