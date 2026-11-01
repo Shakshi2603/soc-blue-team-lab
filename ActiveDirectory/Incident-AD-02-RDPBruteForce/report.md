@@ -94,10 +94,10 @@ Expected result: `Administrator` from `192.168.10.5` with `Failure_Count` in the
 **Screenshot references:**
 
 ### Attack
-- `Attack & Detection/hydra-rdp-bruteforce.png` - Hydra terminal showing rapid password attempts against rdp://192.168.10.10 from rockyou.txt (14.3M wordlist)
+- `attack&detection/hydra-rdp-bruteforce.png` - Hydra terminal showing rapid password attempts against rdp://192.168.10.10 from rockyou.txt (14.3M wordlist)
 
 ### Detection
-- `Attack & Detection/splunk-4625-rdp-failures.png` - Splunk SPL aggregation showing Failure_Count spike for Administrator from 192.168.10.5
+- `attack&detection/splunk-4625-rdp-failures.png` - Splunk SPL aggregation showing Failure_Count spike for Administrator from 192.168.10.5
 
 ## 5. Network Evidence
 
