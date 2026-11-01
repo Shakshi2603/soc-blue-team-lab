@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-Using valid low-privilege domain credentials (`jsmith`), a simulated attacker requested a Kerberos service ticket (TGS) for the `svc_backup` service account, which is configured with a Service Principal Name (SPN) and is therefore "Kerberoastable." The ticket was extracted via Impacket's `GetUserSPNs` tool, saved offline, and cracked using Hashcat in approximately the runtime of a standard rule-based attack, recovering the plaintext password `Back2024!`. This investigation confirms that any domain account with an SPN and a weak or reused password is a direct credential-theft target requiring no privilege escalation or exploitation - only a valid, low-privilege domain logon.
+Using valid low-privilege domain credentials (`jsmith`), a simulated attacker requested a Kerberos service ticket (TGS) for the `svc_backup` service account, which is configured with a Service Principal Name (SPN) and is therefore "Kerberoastable." The ticket was extracted via Impacket's `GetUserSPNs` tool, saved offline, and cracked using Hashcat in approximately the runtime of a standard rule-based attack, recovering the plaintext password `<LAB_PASSWORD_REDACTED>`. This investigation confirms that any domain account with an SPN and a weak or reused password is a direct credential-theft target requiring no privilege escalation or exploitation - only a valid, low-privilege domain logon.
 
 The attack was successfully detected via custom Wazuh and splunk correlation rule built specifically to flag Kerberos service ticket requests (Event ID 4769) using RC4-HMAC encryption (`ticketEncryptionType: 0x17`), which is the well-known signature of a Kerberoasting request, since RC4 tickets are intentionally requested by attackers over the stronger AES default in order to enable faster offline cracking.
 
@@ -24,7 +24,7 @@ The attack was successfully detected via custom Wazuh and splunk correlation rul
 | T+0:00 | TGS-REQ issued for `svc_backup`; DC01 returns RC4-encrypted service ticket (Event ID 4769, `ticketEncryptionType: 0x17`) |
 | T+0:00 | Wazuh custom rule 100010 fires, classifying the event as potential Kerberoasting activity |
 | T+0:00 | Hash saved to `kerberoast.hash` in `$krb5tgs$23$...` format |
-| T+~X min | `hashcat -m 13100 kerberoast.hash --show` recovers plaintext: `Back2024!` |
+| T+~X min | `hashcat -m 13100 kerberoast.hash --show` recovers plaintext: `<LAB_PASSWORD_REDACTED>` |
 
 ## 3. Attack Methodology
 
@@ -32,7 +32,7 @@ The attack was successfully detected via custom Wazuh and splunk correlation rul
 
 **Step 1 - Identify and request the SPN ticket:**
 ```bash
-impacket-GetUserSPNs SOC.LAB/jsmith:Password123! -dc-ip 192.168.10.10 -request -outputfile kerberoast.hash
+impacket-GetUserSPNs SOC.LAB/jsmith:<LAB_PASSWORD_REDACTED> -dc-ip 192.168.10.10 -request -outputfile kerberoast.hash
 ```
 
 This authenticates as `jsmith`, queries the domain for all accounts with a registered SPN, and requests a TGS for each one found. The domain controller has no way to distinguish this from a legitimate service ticket request - any authenticated user can request a TGS for any SPN-registered account, by design of the Kerberos protocol.
@@ -44,7 +44,7 @@ hashcat -m 13100 kerberoast.hash --show
 
 Mode `13100` is Hashcat's Kerberos 5 TGS-REP etype 23 (RC4-HMAC) cracking mode. The recovered credential was:
 ```
-svc_backup : Back2024!
+svc_backup : <LAB_PASSWORD_REDACTED>
 ```
 
 **Why this works:** The `svc_backup` account was deliberately configured (Phase 1, Day 4B) with an SPN via `setspn`, making it eligible for Kerberoasting. Because the account's password was set to a value crackable within a standard wordlist/rule attack, the ticket's RC4-HMAC encryption was reversible in a practical timeframe.
@@ -104,7 +104,7 @@ Rule `100011` was kept in place as a parsing-verification fallback to confirm th
 ### Attack
 - `attack/user-spn-output.png` - Impacket GetUserSPNs identifying svc_backup and requesting TGS
 - `attack/kerberoast-hash-extracted.png` - extracted `$krb5tgs$23$...` hash confirmed via `cat`
-- `attack/hashcat-cracked.png` - Hashcat recovering plaintext: Back2024!
+- `attack/hashcat-cracked.png` - Hashcat recovering plaintext: <LAB_PASSWORD_REDACTED>
 
 ### Detection
 - `detection/wazuhproof.png` - Wazuh Discover query filtered on Event ID 4769, showing jsmith→svc_backup hits
@@ -124,12 +124,12 @@ A Kerberos TGS-REQ/TGS-REP exchange occurred between 192.168.10.5 (Kali-Attacker
 | Target service account | svc_backup | SPN-registered, Kerberoastable account |
 | Target SPN | HTTP/backupserver.soc.lab | Registered via `setspn` in Phase 1 |
 | Encryption type | 0x17 (RC4-HMAC) | Kerberoasting detection signature |
-| Cracked credential | svc_backup : Back2024! | Recovered via Hashcat mode 13100 |
+| Cracked credential | svc_backup : <LAB_PASSWORD_REDACTED> | Recovered via Hashcat mode 13100 |
 | Detection rule | Wazuh rule ID 100010 | Fired on RC4-encrypted 4769 event |
 
 ## 7. Root Cause
 
-Two compounding factors enabled this attack: (1) the `svc_backup` account was registered with an SPN, making it a valid Kerberoasting target by protocol design, and (2) the account's password (`Back2024!`) was within the range crackable by a standard offline attack. Kerberoasting itself cannot be fully prevented since SPN-registered accounts must support ticket issuance - the real control point is password strength and ticket encryption type enforcement.
+Two compounding factors enabled this attack: (1) the `svc_backup` account was registered with an SPN, making it a valid Kerberoasting target by protocol design, and (2) the account's password (`<LAB_PASSWORD_REDACTED>`) was within the range crackable by a standard offline attack. Kerberoasting itself cannot be fully prevented since SPN-registered accounts must support ticket issuance - the real control point is password strength and ticket encryption type enforcement.
 
 ## 8. Impact Assessment
 

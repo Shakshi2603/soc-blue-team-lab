@@ -10,9 +10,9 @@
 
 ## 1. Executive Summary
 
-A simulated attacker exploited a Kerberos pre-authentication misconfiguration on the `jsmith` account (`DoesNotRequirePreAuth = True`) to request an AS-REP ticket from the domain controller without supplying any credentials. The returned ticket is encrypted with the user's password hash, making it crackable offline. Using Impacket's `GetNPUsers` tool and Hashcat (mode 18200), the attacker extracted the `$krb5asrep$23$...` hash for `jsmith@SOC.LAB` and recovered the plaintext password `Password123!!` in under 10 seconds against `rockyou.txt`.
+A simulated attacker exploited a Kerberos pre-authentication misconfiguration on the `jsmith` account (`DoesNotRequirePreAuth = True`) to request an AS-REP ticket from the domain controller without supplying any credentials. The returned ticket is encrypted with the user's password hash, making it crackable offline. Using Impacket's `GetNPUsers` tool and Hashcat (mode 18200), the attacker extracted the `$krb5asrep$23$...` hash for `jsmith@SOC.LAB` and recovered the plaintext password `<LAB_PASSWORD_REDACTED>` in under 10 seconds against `rockyou.txt`.
 
-AS-REP Roasting is distinct from Kerberoasting (AD-02) in a critical way: it requires **zero prior credentials**. An unauthenticated attacker with network access to the domain controller on port 88 can enumerate vulnerable accounts and extract crackable hashes without ever authenticating to the domain. Detection centers on Event ID 4768 (Kerberos TGT Request) with `preAuthType = 0`, which is the precise indicator that pre-authentication was skipped — a custom Wazuh rule (ID 100030) and a Splunk SPL hunt were deployed to catch this.
+AS-REP Roasting is distinct from Kerberoasting (AD-03) in a critical way: it requires **zero prior credentials**. An unauthenticated attacker with network access to the domain controller on port 88 can enumerate vulnerable accounts and extract crackable hashes without ever authenticating to the domain. Detection centers on Event ID 4768 (Kerberos TGT Request) with `preAuthType = 0`, which is the precise indicator that pre-authentication was skipped — a custom Wazuh rule (ID 100030) and a Splunk SPL hunt were deployed to catch this.
 
 ## 2. Timeline of Events
 
@@ -24,7 +24,7 @@ AS-REP Roasting is distinct from Kerberoasting (AD-02) in a critical way: it req
 | T+0:00 | DC01 returns AS-REP encrypted with jsmith's password hash — no credential check performed |
 | T+0:00 | Hash saved to `asrep.hash` in `$krb5asrep$23$jsmith@SOC.LAB:...` format |
 | T+0:00 | Wazuh rule 100030 fires: Event ID 4768 with preAuthType 0 detected |
-| T+0:09 | `hashcat -m 18200 asrep.hash /usr/share/wordlists/rockyou.txt` recovers: `Password123!!` |
+| T+0:09 | `hashcat -m 18200 asrep.hash /usr/share/wordlists/rockyou.txt` recovers: `<LAB_PASSWORD_REDACTED>` |
 | T+0:09 | Hash cracked at 74.83% through rockyou.txt (10.7M of 14.3M candidates processed) |
 
 ## 3. Attack Methodology
@@ -63,7 +63,7 @@ hashcat -m 18200 asrep.hash --show
 
 Mode `18200` is Hashcat's Kerberos 5, etype 23 AS-REP cracking mode (RC4-HMAC). Recovered credential:
 ```
-jsmith : Password123!!
+jsmith : <LAB_PASSWORD_REDACTED>
 ```
 
 Cracked in 9 seconds at 1138.6 kH/s — 10.7 million candidates tested before finding the match.
@@ -111,7 +111,7 @@ Expected result: `jsmith` from `192.168.10.5` with `preAuthType = 0` — the exa
 
 ### Attack
 - `attack/asrep-hash-extracted.png` — impacket-GetNPUsers output and `cat asrep.hash` showing `$krb5asrep$23$jsmith@SOC.LAB:...`
-- `attack/hashcat-asrep-cracked.png` — Hashcat mode 18200 result showing `Password123!!` recovered in 9 seconds
+- `attack/hashcat-asrep-cracked.png` — Hashcat mode 18200 result showing `<LAB_PASSWORD_REDACTED>` recovered in 9 seconds
 
 ### Detection
 - `detection/splunk-4768-preauth0.png` — Splunk SPL output showing jsmith AS-REP request with preAuthType 0 from Kali attacker IP
@@ -128,7 +128,7 @@ A single Kerberos AS-REQ/AS-REP exchange occurred on TCP/UDP port 88 between 192
 | Vulnerable account | jsmith@SOC.LAB | `DoesNotRequirePreAuth = True` |
 | Misconfiguration flag | `DONT_REQ_PREAUTH` | Set in UserAccountControl attribute |
 | Hash type | `$krb5asrep$23$` | Kerberos 5 AS-REP etype 23 (RC4-HMAC) |
-| Cracked password | Password123!! | Recovered via Hashcat mode 18200 in 9s |
+| Cracked password | <LAB_PASSWORD_REDACTED> | Recovered via Hashcat mode 18200 in 9s |
 | Detection event | Event ID 4768, preAuthType=0 | Fired Wazuh rule 100030 |
 | Credentials required | None | Attacker had zero prior domain access |
 
@@ -140,7 +140,7 @@ The `jsmith` account was explicitly configured with `DoesNotRequirePreAuth = Tru
 
 **Severity: High**
 
-The attack recovered valid domain credentials (`jsmith : Password123!!`) with zero prior access to the domain — not even a guest account was needed. In a real environment, an attacker on the same network segment as the domain controller could enumerate all accounts with pre-auth disabled using tools like `ldapdomaindump` or BloodHound (which flags `DONT_REQ_PREAUTH` accounts in its analysis), then request and crack hashes for all of them in a single pass. This represents a zero-credential-to-domain-user escalation path.
+The attack recovered valid domain credentials (`jsmith : <LAB_PASSWORD_REDACTED>`) with zero prior access to the domain — not even a guest account was needed. In a real environment, an attacker on the same network segment as the domain controller could enumerate all accounts with pre-auth disabled using tools like `ldapdomaindump` or BloodHound (which flags `DONT_REQ_PREAUTH` accounts in its analysis), then request and crack hashes for all of them in a single pass. This represents a zero-credential-to-domain-user escalation path.
 
 ## 9. Recommendations
 

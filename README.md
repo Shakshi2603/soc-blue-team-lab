@@ -1,209 +1,139 @@
-# 🛡️ SOC Incident Lab - Blue Team Home Lab Portfolio
+# SOC Blue Team Lab
 
-> A hands-on SOC analyst portfolio built from scratch. Real attacks. Real detection. Real documentation.
+A hands-on blue-team home lab documenting controlled attack simulations, security telemetry, SIEM detections, and investigation write-ups. The goal is to practise the workflow expected of a junior SOC analyst: understand an alert, identify relevant evidence, validate suspicious activity, document findings, and recommend an appropriate response.
 
----
+> **Scope:** This is a personal, isolated lab portfolio. It is not a production SOC environment and does not represent real-world incident response for an organization. All systems, accounts, addresses, and credentials are synthetic lab data.
 
-## 🔭 What This Is
+## At a glance
 
-This is not a tutorial-following exercise. This is a SOC home lab where I simulate attacks, detect them across multiple SIEM platforms, write custom detection rules, and document everything in NIST Incident Response format.
+- **Environment:** VirtualBox lab using a host-only network (`192.168.10.0/24`)
+- **Windows domain:** `SOC.LAB`
+- **Monitoring and analysis:** Wazuh, Splunk, Windows Security logs, Sysmon, Wireshark/tcpdump
+- **Cloud-SIEM learning:** KQL query examples are included; end-to-end Microsoft Sentinel ingestion is not claimed as complete in this repository
+- **Detection content:** Custom Wazuh rules and experimental Sigma rules
+- **Documentation:** Investigation reports, evidence screenshots, architecture notes, and query/script examples
 
-Built by a BTech student at NIT Hamirpur who is actively transitioning into cybersecurity - starting with blue team and SOC operations.
+## Lab architecture
 
----
+![SOC lab architecture](Architecture/Lab-Diagram.png)
 
-## 🏗️ Lab Architecture
-
-![Lab Architecture Diagram](Architecture/Lab-Diagram.png)
-
-
-**Environment Overview:**
-
-| Machine | OS | Role | IP |
+| Host | Operating system | Role | Lab IP |
 |---|---|---|---|
-| Kali-Attacker | Kali Linux | Attacker | 192.168.10.5 |
-| Ubuntu-Victim | Ubuntu Server 22.04 | Linux Target | 192.168.10.30 |
-| DC01-Server | Windows Server 2022 | Domain Controller (SOC.LAB) | 192.168.10.10 |
-| WS01-Client | Windows 10 | Domain Workstation 1 | 192.168.10.20 |
-| WS02-Client | Windows 11 | Domain Workstation 2 | 192.168.10.21 |
-| Wazuh-SIEM | Ubuntu Server 22.04 | SIEM / XDR | 192.168.10.100 |
+| Kali-Attacker | Kali Linux | Controlled attack simulation | `192.168.10.5` |
+| DC01-Server | Windows Server 2022 | Active Directory domain controller | `192.168.10.10` |
+| WS01-Client | Windows 10 | Domain workstation | `192.168.10.20` |
+| WS02-Client | Windows 11 | Domain workstation | `192.168.10.21` |
+| Ubuntu-Victim | Ubuntu Server 22.04 | Linux target and log-source exercises | `192.168.10.30` |
+| Wazuh-SIEM | Ubuntu Server 22.04 | SIEM / monitoring server | `192.168.10.100` |
 
-**Active Directory Domain:** `SOC.LAB`
+See [Architecture/README.md](Architecture/README.md) for the environment and network notes.
 
----
+## Investigation portfolio
 
-## ⚙️ SIEM Platforms Used
+### Active Directory investigations
 
-| Platform | Purpose |
+| ID | Investigation | ATT&CK techniques | Focus |
+|---|---|---|---|
+| AD-01 | [Active Directory enumeration](ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | LDAP enumeration and BloodHound attack-path discovery |
+| AD-02 | [RDP brute force](ActiveDirectory/Incident-AD-02-RDPBruteForce/) | T1110.001, T1021.001 | Failed logons, Event ID 4625, threshold-based detection |
+| AD-03 | [Kerberoasting](ActiveDirectory/Incident-AD-03-Kerberoasting/) | T1558.003 | Service-ticket requests and Kerberos telemetry |
+| AD-04 | [AS-REP Roasting](ActiveDirectory/Incident-AD-04-ASREPRoasting/) | T1558.004 | Pre-authentication misconfiguration and Event ID 4768 |
+| AD-05 | [Pass-the-Hash](ActiveDirectory/Incident-AD-05-PassTheHash/) | T1550.002, related T1003.001 | Credential access, NTLM authentication, lateral movement |
+
+See the [Active Directory investigation index](ActiveDirectory/README.md).
+
+### Threat-intelligence and phishing write-ups
+
+- [LetsDefend email analysis](Writeups/threat-intel/LetsDefend-EmailAnalysis.md)
+- [GrabThePhisher analysis](Writeups/threat-intel/grabthefisher.md)
+
+### Detection content
+
+- [Wazuh local rules](rules/wazuh/local_rules.xml)
+- [Sigma — Active Directory](rules/sigma/ad/)
+- [Sigma — Linux](rules/sigma/linux/)
+
+The Sigma rules are marked experimental. Their log-source assumptions and field mappings should be validated against the target data source before operational use.
+
+## SIEM and analysis tools
+
+| Tool | How it appears in this portfolio |
 |---|---|
-| **Wazuh 4.7** | Primary SIEM + XDR + Active Response |
-| **Microsoft Sentinel** | Cloud SIEM - KQL queries and workbooks |
-| **Splunk Free** | Log analysis + SPL queries |
+| Wazuh | Custom local rules and alerting exercises |
+| Splunk | SPL-based investigation evidence in selected reports |
+| Microsoft Sentinel | KQL query examples in [Scripts/kql-queries.txt](Scripts/kql-queries.txt); ingestion status is not represented as complete here |
+| Wireshark / tcpdump | Packet capture and network analysis exercises |
+| BloodHound | Active Directory relationship and attack-path analysis |
+| Impacket, Hydra, Nmap, Hashcat, Mimikatz | Controlled attack simulation in the isolated lab |
 
----
+## Repository map
 
-## 🔍 Investigation Index
-
-### Active Directory Attacks — Complete Kill Chain
-
-> These five investigations tell one complete attacker story: from domain recon → initial access via brute force → Kerberos credential theft → protocol-level persistence → lateral movement to SYSTEM.
-
-| Kill Chain Step | ID | Investigation | MITRE Technique | Status |
-|---|---|---|---|---|
-| Reconnaissance | AD-01 | [BloodHound & LDAP Enumeration](./ActiveDirectory/Incident-AD-01-Enumeration/) | T1069.002, T1087.002 | ✅ DONE |
-| Initial Access | AD-02 | [RDP Brute Force Against Domain Controller](./ActiveDirectory/Incident-AD-02-RDPBruteForce/) | T1110.001, T1021.001 | ✅ DONE |
-| Credential Access | AD-03 | [Kerberoasting Service Account](./ActiveDirectory/Incident-AD-03-Kerberoasting/) | T1558.003 | ✅ DONE |
-| Persistence | AD-04 | [AS-REP Roasting — Protocol-Level Backdoor](./ActiveDirectory/Incident-AD-04-ASREPRoasting/) | T1558.004 | ✅ DONE |
-| Lateral Movement | AD-05 | [Pass-the-Hash via Mimikatz + smbexec](./ActiveDirectory/Incident-AD-05-PassTheHash/) | T1550.002 | ✅ DONE |
-
-### Linux Incident Investigations
-
-| # | Investigation | MITRE Technique | Status |
-|---|---|---|---|
-| 01 | [Port Scan Detection](./Linux-Incidents/Incident-01-PortScan/) | T1046 | ⏳ Upcoming |
-| 02 | [SSH Brute Force](./Linux-Incidents/Incident-02-SSHBruteForce/) | T1110.001 | ⏳ Upcoming |
-| 03 | [Web Directory Enumeration](./Linux-Incidents/Incident-03-WebEnumeration/) | T1083 | ⏳ Upcoming |
-| 04 | [Web Vulnerability Scan](./Linux-Incidents/Incident-04-WebVulnScan/) | T1595.002 | ⏳ Upcoming |
-| 05 | [Reverse Shell Attack](./Linux-Incidents/Incident-05-ReverseShell/) | T1059.004 | ⏳ Upcoming |
-| 06 | [Credential Sniffing](./Linux-Incidents/Incident-06-CredSniffing/) | T1040 | ⏳ Upcoming |
-| 07 | [Privilege Escalation - SUID/Cron](./Linux-Incidents/Incident-07-PrivEsc/) | T1548.001, T1053.003 | ⏳ Upcoming |
-| 08 | [Data Exfiltration](./Linux-Incidents/Incident-08-DataExfil/) | T1048, T1041 | ⏳ Upcoming |
-
-### Threat Hunting
-
-| # | Exercise | APT Group | Status |
-|---|---|---|---|
-| TH-01 | [APT Simulation - TTP Hunt](./ThreatHunting/) | APT29 / Lazarus | ⏳ Upcoming |
-
----
-
-## 🎯 Threat Intel Write-ups
-
-| Investigation | Source | Technique(s) | Link |
-|---|---|---|---|
-| Email Analysis - Malicious Attachment | LetsDefend | T1566.001, T1204.002, T1036 | [Report](Writeups/threat-intel/LetsDefend-EmailAnalysis.md) |
-| GrabThePhisher - Phishing Kit Analysis | CyberDefenders | T1566.003, T1056.003, T1567 | [Report](Writeups/threat-intel/grabthefisher.md) |
-
----
-
-## 🛠️ Skills Demonstrated
-
-| Category | Skills |
-|---|---|
-| **SIEM** | Wazuh, Microsoft Sentinel, Splunk |
-| **Query Languages** | KQL (Sentinel), SPL (Splunk), Wazuh rules |
-| **Detection Engineering** | Sigma rules, YARA rules, custom Wazuh rules |
-| **Network Analysis** | Wireshark, tcpdump, pcap analysis |
-| **Active Directory** | AD attacks, GPO, Kerberos, BloodHound |
-| **Attack Tools** | Nmap, Hydra, Gobuster, Nikto, Metasploit, Impacket |
-| **Frameworks** | MITRE ATT&CK, NIST Incident Response |
-| **Scripting** | Python (IOC enrichment, alert notifier), Bash |
-| **Threat Intelligence** | VirusTotal API, AbuseIPDB API |
-
----
-
-## 📁 Repository Structure
-
-```
-SOC-Incident-Lab/
+```text
+.
 ├── README.md
-├── Architecture/
-│   ├── lab-diagram.png          # Full lab topology diagram
-│   └── mitre-navigator-layer.json
 ├── ActiveDirectory/
-│   ├── Incident-AD-01-Enumeration/      # Reconnaissance
-│   ├── Incident-AD-02-RDPBruteForce/    # Initial Access
-│   ├── Incident-AD-03-Kerberoasting/    # Credential Access
-│   ├── Incident-AD-04-ASREPRoasting/    # Persistence
-│   ├── Incident-AD-05-PassTheHash/      # Lateral Movement
-├── Linux-Incidents/
-│   ├── Incident-01-PortScan/
-│   ├── Incident-02-SSHBruteForce/
-│   ├── Incident-03-WebEnumeration/
-│   ├── Incident-04-WebVulnScan/
-│   ├── Incident-05-ReverseShell/
-│   ├── Incident-06-CredSniffing/
-│   ├── Incident-07-PrivEsc/
-│   └── Incident-08-DataExfil/
-├── ThreatHunting/
+│   ├── Incident-AD-01-Enumeration/
+│   ├── Incident-AD-02-RDPBruteForce/
+│   ├── Incident-AD-03-Kerberoasting/
+│   ├── Incident-AD-04-ASREPRoasting/
+│   ├── Incident-AD-05-PassTheHash/
+│   └── README.md
+├── Architecture/
+│   ├── Lab-Diagram.png
+│   └── README.md
+├── Scripts/
+│   ├── alert_notifier.py
+│   ├── ioc_enrichment.py
+│   ├── kql-queries.txt
+│   └── noise_generator.sh
+├── Wazuh-SIEM/
+│   └── README.md
 ├── Writeups/
-    ├── threat-intel
-        ├── images/
+│   └── threat-intel/
 ├── rules/
 │   ├── sigma/
-│   │   ├── linux/
-│   │   └── ad/
-│   ├── yara/
+│   │   ├── ad/
+│   │   └── linux/
 │   └── wazuh/
-└── scripts/
-    ├── ioc_enrichment.py
-    ├── alert_notifier.py
-    ├── noise_generator.sh
-    └── kql-queries.txt
+│       └── local_rules.xml
 ```
 
----
+## Investigation documentation
 
-## 📋 Incident Report Format
+The reports use a consistent incident-investigation structure where applicable:
 
-Every investigation is documented using the **NIST IR Framework**:
+1. Executive summary and scope
+2. Timeline of observed activity
+3. Attack or event description
+4. Relevant host and security telemetry
+5. Detection logic and SIEM evidence
+6. MITRE ATT&CK mapping
+7. Assessment, limitations, and defensive recommendations
 
-1. Executive Summary
-2. Timeline of Events
-3. Attack Methodology (MITRE ATT&CK)
-4. Log Evidence
-5. Network Evidence (pcap analysis)
-6. IOC Table
-7. Root Cause
-8. Impact Assessment
-9. Recommendations
-10. Lessons Learned
+Not every report contains every section yet; documentation is being standardized as the lab evolves.
 
----
+## Current scope and next steps
 
-## 🎯 MITRE ATT&CK Coverage
+- [x] Five Active Directory attack investigations documented
+- [x] Wazuh custom local rules included
+- [x] Experimental Sigma rules included
+- [x] Phishing and threat-intelligence write-ups included
+- [ ] Standardize all incident reports and evidence captions
+- [ ] Validate and document the end-to-end Sentinel data-ingestion path
+- [ ] Expand Linux investigation reports and SOC alert-triage case studies
 
-> *(MITRE ATT&CK Navigator layer will be added on completion)*
+## Safety and credential handling
 
-Techniques covered across all investigations:
+All demonstrations are performed in a controlled lab. Public documentation intentionally uses placeholders instead of passwords, password hashes, API keys, or other reusable secrets. Screenshots containing credential material are excluded from the public repository. Never reuse lab credentials in personal or production environments.
 
-`T1046` `T1110.001` `T1083` `T1595.002` `T1059.004` `T1071` `T1040` `T1548.001` `T1053.003` `T1048` `T1041` `T1069.002` `T1087.002` `T1558.003` `T1558.004` `T1550.002` `T1021.002` `T1059.001` `T1078`
+## About
 
----
+BTech Electrical Engineering student at **NIT Hamirpur**, building practical blue-team skills for SOC Analyst / Cybersecurity Analyst internship roles.
 
-## 🔧 Tools & Resources
-
-| Category | Tool | Purpose |
-|---|---|---|
-| SIEM | Wazuh 4.7 | Primary SIEM + XDR + active response |
-| SIEM | Microsoft Sentinel | Cloud SIEM + KQL queries |
-| SIEM | Splunk Free | Log analysis + SPL queries |
-| Network | Wireshark | Packet capture and analysis |
-| Attack | Nmap | Port scanning |
-| Attack | Hydra | Brute force attacks |
-| Attack | Gobuster | Web directory enumeration |
-| Attack | Metasploit | Exploitation framework |
-| Attack | Impacket | AD attack toolkit |
-| AD | BloodHound | AD attack path mapping |
-| Detection | Sigma | Universal detection rule format |
-| Detection | YARA | File and pattern-based detection |
-| Intel | VirusTotal API | IP/hash reputation |
-| Intel | AbuseIPDB API | IP abuse lookup |
-| Framework | MITRE ATT&CK | TTP mapping |
-| Diagram | draw.io | Architecture diagrams |
+- Google Cybersecurity Certificate (Coursera)
+- TryHackMe SOC Level 1
+- [LinkedIn](https://www.linkedin.com/in/shakshi-sona/)
 
 ---
 
-## 👤 About Me
-
-BTech student (Electrical Engineering) at **NIT Hamirpur**, actively building skills for a career in cybersecurity — starting with blue team / SOC operations.
-
-- 📜 Google Cybersecurity Certificate (Coursera)
-- 🔐 TryHackMe SOC Level 1 
-- 🎯 Target role: SOC Analyst Internship in India
-
-📬 Connect with me on [LinkedIn](https://www.linkedin.com/in/shakshi-sona/)
-
----
-
-*This lab is actively being built. New investigations and detection rules are added regularly.*
+*This repository is an evolving learning portfolio. Project status is described conservatively; planned work is not presented as completed.*

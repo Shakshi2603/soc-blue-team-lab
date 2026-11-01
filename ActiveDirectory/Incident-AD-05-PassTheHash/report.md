@@ -10,17 +10,17 @@
 
 ## 1. Executive Summary
 
-Using a low-privilege domain account (`Jsmith`) with local administrator rights on a compromised Windows workstation, the attacker ran Mimikatz to dump NTLM credential hashes from LSASS memory without ever recovering the plaintext password. The extracted NTLM hash (`2b576acbe6bcfda7294d6bd18041b8fe`) was passed directly to Impacket's `smbexec` tool to authenticate to a second machine (WindowsClient11, 192.168.10.21) over SMB - achieving a `NT AUTHORITY\SYSTEM` interactive shell with no password required.
+Using a low-privilege domain account (`Jsmith`) with local administrator rights on a compromised Windows workstation, the attacker ran Mimikatz to dump NTLM credential hashes from LSASS memory without ever recovering the plaintext password. The extracted NTLM hash (`<NTLM_HASH_REDACTED>`) was passed directly to Impacket's `smbexec` tool to authenticate to a second machine (WindowsClient11, 192.168.10.21) over SMB - achieving a `NT AUTHORITY\SYSTEM` interactive shell with no password required.
 
-This investigation demonstrates a complete credential access → lateral movement chain: credential dumping from memory (T1003.001) feeding directly into Pass-the-Hash (T1550.002), bypassing password cracking entirely. Unlike Kerberoasting (AD-02), PtH requires no offline cracking phase - the hash itself is a valid authentication token in NTLM. Detection required correlating three distinct event types in Splunk: LSASS access (credential dumping), NTLM network logon (Event ID 4624 Logon Type 3), and post-exploitation activity on the target host.
+This investigation demonstrates a complete credential access → lateral movement chain: credential dumping from memory (T1003.001) feeding directly into Pass-the-Hash (T1550.002), bypassing password cracking entirely. Unlike Kerberoasting (AD-03), PtH requires no offline cracking phase - the hash itself is a valid authentication token in NTLM. Detection required correlating three distinct event types in Splunk: LSASS access (credential dumping), NTLM network logon (Event ID 4624 Logon Type 3), and post-exploitation activity on the target host.
 
 ## 2. Timeline of Events
 
 | Time | Event |
 |---|---|
 | T+0:00 | Attacker on compromised host runs Mimikatz: `privilege::debug` succeeds (Privilege 20 OK) |
-| T+0:00 | `sekurlsa::logonpasswords` dumps LSASS memory; Jsmith NTLM hash extracted: `2b576acbe6bcfda7294d6bd18041b8fe` |
-| T+0:01 | Attacker runs `impacket-smbexec SOC.LAB/Jsmith@192.168.10.21 -hashes :2b576acbe6bcfda7294d6bd18041b8fe` from Kali |
+| T+0:00 | `sekurlsa::logonpasswords` dumps LSASS memory; Jsmith NTLM hash extracted: `<NTLM_HASH_REDACTED>` |
+| T+0:01 | Attacker runs `impacket-smbexec SOC.LAB/Jsmith@192.168.10.21 -hashes :<NTLM_HASH_REDACTED>` from Kali |
 | T+0:01 | SMB authentication to WindowsClient11 (192.168.10.21) succeeds via NTLM hash |
 | T+0:01 | Impacket smbexec drops service binary to Windows root folder; new Windows service created |
 | T+0:01 | `whoami` confirms `nt authority\system` on WindowsClient11 |
@@ -48,7 +48,7 @@ Mimikatz interfaces with the `lsass.exe` process to extract cached credential ma
 ```
 * Username : Jsmith
 * Domain   : SOC
-* NTLM     : 2b576acbe6bcfda7294d6bd18041b8fe
+* NTLM     : <NTLM_HASH_REDACTED>
 * SHA1      : e30d1c18c56c027667d35734660751dc80203354
 ```
 
@@ -59,7 +59,7 @@ Mimikatz interfaces with the `lsass.exe` process to extract cached credential ma
 Executed from Kali-Attacker (192.168.10.5):
 
 ```bash
-impacket-smbexec SOC.LAB/Jsmith@192.168.10.21 -hashes :2b576acbe6bcfda7294d6bd18041b8fe
+impacket-smbexec SOC.LAB/Jsmith@192.168.10.21 -hashes :<NTLM_HASH_REDACTED>
 ```
 
 The format `-hashes :NTLM` passes an empty LM hash and the full NTLM hash. Impacket uses this to authenticate over SMB (port 445) via NTLM challenge-response without needing the plaintext password. On the target, `smbexec` creates a temporary Windows service that executes commands and pipes output back over SMB - the entire shell interaction happens through this service channel.
@@ -151,7 +151,7 @@ NTLM authentication to the domain controller (DC01.SOC.LAB, 192.168.10.10) also 
 |---|---|---|
 | Attacker host | 192.168.10.5 (Kali-Attacker) | Source of smbexec lateral movement |
 | Compromised user | Jsmith@SOC.LAB | Account whose hash was dumped and passed |
-| NTLM hash | `2b576acbe6bcfda7294d6bd18041b8fe` | Extracted from LSASS; passed directly without cracking |
+| NTLM hash | `<NTLM_HASH_REDACTED>` | Extracted from LSASS; passed directly without cracking |
 | Target host | 192.168.10.21 (WindowsClient11) | Lateral movement destination |
 | Access achieved | NT AUTHORITY\SYSTEM | Full system compromise via smbexec service |
 | Tool: credential dump | Mimikatz 2.2.0 | `privilege::debug` + `sekurlsa::logonpasswords` |
