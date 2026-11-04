@@ -31,7 +31,8 @@
     <description>SOAR Orchestration: Active Response successfully reversed/flushed firewall drop rule on endpoint.</description>
     <group>active_response,containment</group>
   </rule>
-<!-- Escalating Kerberoasting Events -->
+
+  <!-- Escalating Kerberoasting Events -->
   <rule id="100010" level="10">
     <if_sid>60100, 60101, 60103, 60106</if_sid>
     <field name="win.system.eventID">^4769$</field>
@@ -47,4 +48,29 @@
     <description>Security Event: Generic Kerberos Ticket Request (Event ID 4769) parsed by SIEM.</description>
     <group>windows_security</group>
   </rule>
+
+  <rule id="100040" level="10" frequency="15" timeframe="30">
+    <if_matched_sid>31100</if_matched_sid>
+    <same_source_ip />
+    <description>Network Reconnaissance: Potential Nmap Port Scan detected from IP $(srcip)</description>
+    <group>reconnaissance,port_scan,mitre_t1046</group>
+  </rule>
+
+
+  <rule id="100050" level="10">
+    <if_sid>4100</if_sid>
+    <match>IPTables-PortScan:</match>
+    <description>Network Reconnaissance: Potential port scan detected from $(srcip) targeting $(dstip):$(dstport)</description>
+    <group>local,custom_detections,reconnaissance,port_scan</group>
+  </rule>
+
+  
+  <rule id="100051" level="7">
+    <decoded_as>lab-portscan</decoded_as>
+    <description>Linux Firewall: Port scan connection attempt from $(srcip) to $(dstip):$(dstport)</description>
+    <group>local,custom_detections,reconnaissance,port_scan,</group>
+  </rule>
+
+
 </group>
+
